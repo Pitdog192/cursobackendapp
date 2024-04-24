@@ -13,9 +13,7 @@ class ProductManager {
     }
 
     async addProduct(newProduct) {
-        //Verificar que el archivo exista
-        const existingarchive = fs.existsSync(this.path)
-        if(!existingarchive){
+        if (!fs.existsSync(this.path)) {
             try {
                 // Crear el archivo si no existe
                 await fs.promises.writeFile(this.path, '[]', 'utf-8')
@@ -30,39 +28,26 @@ class ProductManager {
             // Validar que todos los campos sean obligatorios
             let productInterface = JSON.stringify(Object.keys(this.productInterface))
             let newProductInterface = JSON.stringify(Object.keys(newProduct))
-            if (productInterface !== newProductInterface) {
-                return console.log(`Todos los campos del producto ${newProduct.title} deben ser obligatorios`)
-            }
+            if (productInterface !== newProductInterface) return console.log(`Todos los campos del producto ${newProduct.title} deben ser obligatorios`)
             // Validar que no se repita el campo "code"
             const existingProduct = productosArchivo.find(p => p.code === newProduct.code)
-            if (existingProduct) {
-                return console.log(`El código de producto ${newProduct.title} ya existe`)
-            }
+            if (existingProduct) return console.log(`El código de producto ${newProduct.title} ya existe`)
             //Inserción del producto nuevo al archivo
             newProduct.id = productosArchivo.length + 1
             productosArchivo.push(newProduct)
-            await fs.writeFile(this.path, JSON.stringify(productosArchivo, null, 4), (err) =>{
-                err ? console.err(`Error al escribir en el archivo: ${err}`) : console.log(`${newProduct.title} agregado con éxito`)
-            })
+            await fs.writeFile(this.path, JSON.stringify(productosArchivo, null, 4), (err) => err ? console.err(`Error al escribir en el archivo: ${err}`) : console.log(`${newProduct.title} agregado con éxito`))
         } catch (error) {
             console.log(`Error addProduct: ${error}`)
         }
     }
 
     async getProducts(limit) {
-        //Verificar que el archivo exista
-        const existingarchive = fs.existsSync(this.path)
-        if(!existingarchive){
-            throw new Error('El archivo no existe')
-        }
         try {
+            fs.existsSync(this.path) || (() => { throw new Error('El archivo no existe') })()
             let contenidoArchivo = await fs.promises.readFile(this.path, 'utf-8')
             let contenidoParsed = JSON.parse(contenidoArchivo)
-            if(!contenidoParsed){
-                throw new Error('Error al buscar todos los productos')
-            } else {
-                return contenidoParsed.slice(0, limit)
-            }
+            if (!contenidoParsed) throw new Error('Error al buscar todos los productos');
+            return contenidoParsed.slice(0, limit);
         } catch (error) {
             console.log(`Error getProducts: ${error}`)
             throw error
@@ -70,48 +55,34 @@ class ProductManager {
     }
 
     async getProductById(id) {
-        //Verificar que el archivo exista
-        const existingarchive = fs.existsSync(this.path)
-        if (!existingarchive) {
-            console.error('El archivo no existe.');
-            return;
-        }
         try {
+            fs.existsSync(this.path) || (() => { throw new Error('El archivo no existe') })()
             let contenidoArchivo = await fs.promises.readFile(this.path, 'utf-8')
             let contenidoParsed = JSON.parse(contenidoArchivo)
             let productoById = contenidoParsed.find((prod) => prod.id === parseInt(id))
-            if(!productoById){
-                throw new Error(`El producto solicidado con id: ${id} no existe`)
-            } else {
-                return productoById
-            }
+            if (!productoById) throw new Error(`Solicitated product with id: ${id} does not exist`)
+            return productoById
         } catch (error) {
-            console.log(`Error getProducts: ${error}`)
+            console.log(`Error getProductsById: ${error}`)
             throw error
         }
     }
 
-    async updateProduct(id, newProduct){
-        //Verificar que el archivo exista
-        const existingarchive = fs.existsSync(this.path)
-        if (!existingarchive) {
-            throw new Error('El archivo no existe')
-        }
+    async updateProduct(id, newProduct) {
         try {
+            fs.existsSync(this.path) || (() => { throw new Error('El archivo no existe') })()
             let contenidoArchivo = await fs.promises.readFile(this.path, 'utf-8')
             let contenidoParsed = JSON.parse(contenidoArchivo)
             // Validar que todos los campos sean obligatorios
             let productInterface = JSON.stringify(Object.keys(this.productInterface))
             let newProductInterface = JSON.stringify(Object.keys(newProduct))
-            if (productInterface !== newProductInterface) {
-                return console.log(`Todos los campos del producto ${newProduct.title} deben ser obligatorios`)
-            }
+            if (productInterface !== newProductInterface) return console.log(`Todos los campos del producto ${newProduct.title} deben ser obligatorios`)
             //asignación del mismo id al producto que cambía
             let productoById = contenidoParsed.find((prod) => prod.id === id)
             newProduct.id = productoById.id
             let index = contenidoParsed.findIndex((prod) => prod.id === id)
             contenidoParsed.splice(index, 1, newProduct)
-            await fs.writeFile(this.path, JSON.stringify(contenidoParsed, null, 4), (err) =>{
+            await fs.writeFile(this.path, JSON.stringify(contenidoParsed, null, 4), (err) => {
                 err ? console.err(`Error al escribir en el archivo: ${err}`) : console.log(`${newProduct.title} modificado con éxito`)
             })
         } catch (error) {
@@ -119,23 +90,19 @@ class ProductManager {
         }
     }
 
-    async deleteProduct (id){
-        //Verificar que el archivo exista
-        const existingarchive = fs.existsSync(this.path)
-        if (!existingarchive) {
-            throw new Error('El archivo no existe')
-        }
+    async deleteProduct(id) {
         try {
+            fs.existsSync(this.path) || (() => { throw new Error('El archivo no existe') })()
             let contenidoArchivo = await fs.promises.readFile(this.path, 'utf-8')
             let contenidoParsed = JSON.parse(contenidoArchivo)
             let productoById = contenidoParsed.find((prod) => prod.id === id)
-            if(productoById){
+            if (productoById) {
                 let index = contenidoParsed.findIndex((prod) => prod.id === id)
                 contenidoParsed.splice(index, 1)
-                await fs.writeFile(this.path, JSON.stringify(contenidoParsed, null, 4), (err) =>{
+                await fs.writeFile(this.path, JSON.stringify(contenidoParsed, null, 4), (err) => {
                     err ? console.err(`Error al escribir en el archivo: ${err}`) : console.log(`Producto con id: ${id} eliminado con éxito`)
                 })
-            } else{
+            } else {
                 console.log(`No se encontró el producto con id: ${id}`)
             }
         } catch (error) {
@@ -171,5 +138,4 @@ const product3 = {
 }
 
 const productManager = new ProductManager('./src/container/productos.json')
-
 export default productManager

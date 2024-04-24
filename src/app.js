@@ -12,7 +12,7 @@ app.get('/products', async (req, res)=>{
         let allProducts = await productManager.getProducts(limit)
         res.send(allProducts)
     } catch (error){
-        res.status(500).send('Error al obtener productos')
+        res.status(500).send('Error to get products')
     }
 })
 
@@ -22,8 +22,8 @@ app.get('/products/:pid', async (req, res)=>{
         let product = await productManager.getProductById(productId)
         res.send(product)
     } catch (error) {
-        res.status(500).send('Error al obtener el producto')
+        res.status(404).send('Product not found')
     }
 })
 
-app.listen(PORT, () => console.log(`Server listening on port :${PORT}`))
+app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`))
