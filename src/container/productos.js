@@ -35,7 +35,7 @@ class ProductManager {
             //Inserción del producto nuevo al archivo
             newProduct.id = productosArchivo.length + 1
             productosArchivo.push(newProduct)
-            await fs.writeFile(this.path, JSON.stringify(productosArchivo, null, 4), (err) => err ? console.err(`Error al escribir en el archivo: ${err}`) : console.log(`${newProduct.title} agregado con éxito`))
+            await fs.promises.writeFile(this.path, JSON.stringify(productosArchivo, null, 4), (err) => err ? console.err(`Error al escribir en el archivo: ${err}`) : console.log(`${newProduct.title} agregado con éxito`))
         } catch (error) {
             console.log(`Error addProduct: ${error}`)
         }
@@ -82,7 +82,7 @@ class ProductManager {
             newProduct.id = productoById.id
             let index = contenidoParsed.findIndex((prod) => prod.id === id)
             contenidoParsed.splice(index, 1, newProduct)
-            await fs.writeFile(this.path, JSON.stringify(contenidoParsed, null, 4), (err) => {
+            await fs.promises.writeFile(this.path, JSON.stringify(contenidoParsed, null, 4), (err) => {
                 err ? console.err(`Error al escribir en el archivo: ${err}`) : console.log(`${newProduct.title} modificado con éxito`)
             })
         } catch (error) {
@@ -99,7 +99,7 @@ class ProductManager {
             if (productoById) {
                 let index = contenidoParsed.findIndex((prod) => prod.id === id)
                 contenidoParsed.splice(index, 1)
-                await fs.writeFile(this.path, JSON.stringify(contenidoParsed, null, 4), (err) => {
+                await fs.promises.writeFile(this.path, JSON.stringify(contenidoParsed, null, 4), (err) => {
                     err ? console.err(`Error al escribir en el archivo: ${err}`) : console.log(`Producto con id: ${id} eliminado con éxito`)
                 })
             } else {
