@@ -31,13 +31,15 @@ class ProductManager {
             if (productInterface !== newProductInterface) return console.log(`Todos los campos del producto ${newProduct.title} deben ser obligatorios`)
             // Validar que no se repita el campo "code"
             const existingProduct = productosArchivo.find(p => p.code === newProduct.code)
-            if (existingProduct) return console.log(`El código de producto ${newProduct.title} ya existe`)
+            if (existingProduct) throw new Error (`El código de producto ${newProduct.title} ya existe`)
             //Inserción del producto nuevo al archivo
             newProduct.id = productosArchivo.length + 1
             productosArchivo.push(newProduct)
             await fs.promises.writeFile(this.path, JSON.stringify(productosArchivo, null, 4), (err) => err ? console.err(`Error al escribir en el archivo: ${err}`) : console.log(`${newProduct.title} agregado con éxito`))
+            return newProduct
         } catch (error) {
             console.log(`Error addProduct: ${error}`)
+            throw error
         }
     }
 
