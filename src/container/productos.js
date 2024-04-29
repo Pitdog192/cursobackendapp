@@ -1,4 +1,5 @@
 import fs from 'fs'
+import { v4 as uuidv4 } from 'uuid'
 class ProductManager {
     constructor(path) {
         this.path = path
@@ -6,9 +7,9 @@ class ProductManager {
             title: undefined,
             description: undefined,
             price: undefined,
-            thumbnail: undefined,
             code: undefined,
-            stock: undefined
+            stock: undefined,
+            status: undefined
         }
     }
 
@@ -27,13 +28,13 @@ class ProductManager {
             let productosArchivo = JSON.parse(contenidoArchivo)
             // Validar que todos los campos sean obligatorios
             let productInterface = JSON.stringify(Object.keys(this.productInterface))
-            let newProductInterface = JSON.stringify(Object.keys(newProduct))
+            let newProductInterface = JSON.stringify(Object.keys(newProduct).filter(prod => prod !== "thumbnail"))
             if (productInterface !== newProductInterface) return console.log(`Todos los campos del producto ${newProduct.title} deben ser obligatorios`)
             // Validar que no se repita el campo "code"
             const existingProduct = productosArchivo.find(p => p.code === newProduct.code)
             if (existingProduct) throw new Error (`El código de producto ${newProduct.title} ya existe`)
             //Inserción del producto nuevo al archivo
-            newProduct.id = productosArchivo.length + 1
+            newProduct.id = uuidv4()
             productosArchivo.push(newProduct)
             await fs.promises.writeFile(this.path, JSON.stringify(productosArchivo, null, 4), (err) => err ? console.err(`Error al escribir en el archivo: ${err}`) : console.log(`${newProduct.title} agregado con éxito`))
             return newProduct
