@@ -32,14 +32,14 @@ class ProductManager {
             if (productInterface !== newProductInterface) return console.log(`Todos los campos del producto ${newProduct.title} deben ser obligatorios`)
             // Validar que no se repita el campo "code"
             const existingProduct = productosArchivo.find(p => p.code === newProduct.code)
-            if (existingProduct) throw new Error (`El código de producto ${newProduct.title} ya existe`)
+            if (existingProduct) throw new Error (`The product code ${newProduct.code} already exists.`)
             //Inserción del producto nuevo al archivo
             newProduct.id = uuidv4()
             productosArchivo.push(newProduct)
             await fs.promises.writeFile(this.path, JSON.stringify(productosArchivo, null, 4), (err) => err ? console.err(`Error al escribir en el archivo: ${err}`) : console.log(`${newProduct.title} agregado con éxito`))
             return newProduct
         } catch (error) {
-            console.log(`Error addProduct: ${error}`)
+            console.log(error)
             throw error
         }
     }
@@ -62,34 +62,35 @@ class ProductManager {
             fs.existsSync(this.path) || (() => { throw new Error('El archivo no existe') })()
             let contenidoArchivo = await fs.promises.readFile(this.path, 'utf-8')
             let contenidoParsed = JSON.parse(contenidoArchivo)
-            let productoById = contenidoParsed.find((prod) => prod.id === parseInt(id))
+            let productoById = contenidoParsed.find((prod) => prod.id === id)
             if (!productoById) throw new Error(`Solicitated product with id: ${id} does not exist`)
             return productoById
         } catch (error) {
-            console.log(`Error getProductsById: ${error}`)
+            console.log(error)
             throw error
         }
     }
 
-    async updateProduct(id, newProduct) {
+    async updateProduct(pid, newProduct) {
         try {
             fs.existsSync(this.path) || (() => { throw new Error('El archivo no existe') })()
             let contenidoArchivo = await fs.promises.readFile(this.path, 'utf-8')
             let contenidoParsed = JSON.parse(contenidoArchivo)
-            // Validar que todos los campos sean obligatorios
-            let productInterface = JSON.stringify(Object.keys(this.productInterface))
-            let newProductInterface = JSON.stringify(Object.keys(newProduct))
-            if (productInterface !== newProductInterface) return console.log(`Todos los campos del producto ${newProduct.title} deben ser obligatorios`)
-            //asignación del mismo id al producto que cambía
-            let productoById = contenidoParsed.find((prod) => prod.id === id)
-            newProduct.id = productoById.id
-            let index = contenidoParsed.findIndex((prod) => prod.id === id)
-            contenidoParsed.splice(index, 1, newProduct)
-            await fs.promises.writeFile(this.path, JSON.stringify(contenidoParsed, null, 4), (err) => {
-                err ? console.err(`Error al escribir en el archivo: ${err}`) : console.log(`${newProduct.title} modificado con éxito`)
-            })
+            let productoById = contenidoParsed.find((prod) => prod.id === pid)
+            if(!productoById) throw new Error(`Solicitated product with id: ${pid} does not exist`)
+            const {...propiedades} = productoById
+            if(newProduct.hasOwnProperty('id')) throw new Error(`El id no se puede modificar`)
+            let updatedProduct = {
+                ...propiedades,
+                ...newProduct
+            }
+            let index = contenidoParsed.findIndex((prod) => prod.id === pid)
+            contenidoParsed.splice(index, 1, updatedProduct)
+            await fs.promises.writeFile(this.path, JSON.stringify(contenidoParsed, null, 4))
+            return updatedProduct
         } catch (error) {
             console.log(`Error getProducts: ${error}`)
+            throw error
         }
     }
 
@@ -106,39 +107,14 @@ class ProductManager {
                     err ? console.err(`Error al escribir en el archivo: ${err}`) : console.log(`Producto con id: ${id} eliminado con éxito`)
                 })
             } else {
-                console.log(`No se encontró el producto con id: ${id}`)
+                throw new Error(`No se encontró el producto con id: ${id}`)
             }
         } catch (error) {
             console.log(`Error getProducts: ${error}`)
+            throw error
         }
     }
 }
 
-const product1 = {
-    title: "Producto 1",
-    description: "Este es el primer producto",
-    price: 100,
-    thumbnail: "https://example.com/product1.jpg",
-    code: "PROD-1",
-    stock: 10,
-}
-const product2 = {
-    title: "Producto 2",
-    description: "Este es el segundo producto",
-    price: 200,
-    thumbnail: "https://example.com/product2.jpg",
-    code: "PROD-2",
-    stock: 5,
-}
-const product3 = {
-    title: "Producto 3",
-    description: "Este es el tercer producto",
-    // price: 5000,
-    //le falta el precio para comprobar que no lo registre
-    thumbnail: "https://example.com/product3.jpg",
-    code: "PROD-3",
-    stock: 15,
-}
-
-const productManager = new ProductManager('./src/container/productos.json')
+const productManager = new ProductManager('./productos.json')
 export default productManager

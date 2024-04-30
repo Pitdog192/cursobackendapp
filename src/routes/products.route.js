@@ -19,7 +19,7 @@ productRouter.get('/:pid', async (req, res)=>{
         let product = await productManager.getProductById(productId)
         res.send(product)
     } catch (error) {
-        res.status(404).send('Product not found')
+        res.status(404).send({ error: error.message })
     }
 })
 
@@ -30,7 +30,27 @@ productRouter.post('/', async (req, res)=>{
         res.send(newProduct)
     } catch (error) {
         console.log(error)
-        res.status(404).send(error)
+        res.status(404).send({ error: error.message })
+    }
+})
+
+productRouter.put('/:pid', async (req, res) =>{
+    try {
+        let updatedProduct = await productManager.updateProduct(req.params.pid, req.body)
+        res.send(updatedProduct)
+    } catch (error) {
+        console.log(error)
+        res.status(404).send({ error: error.message })
+    }
+})
+
+productRouter.delete('/:pid', async (req,res) => {
+    try {
+        await productManager.deleteProduct(req.params.pid)
+        res.send("Producto eliminado con éxito")
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({ error: error.message })
     }
 })
 

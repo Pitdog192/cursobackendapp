@@ -1,0 +1,20 @@
+[
+    {
+        "title": "Producto 4",
+        "description": "Este es el 4 producto",
+        "price": 400,
+        "code": "PROD-4",
+        "stock": 40,
+        "status": true,
+        "id": "0d89cd39-3ff9-4bbd-a4db-6ca47b6f93f9"
+    },
+    {
+        "title": "titulo modificado producto 2",
+        "description": "Este es el 1 producto",
+        "price": 100,
+        "code": "PROD-1",
+        "stock": 10,
+        "status": true,
+        "id": "24b8b3a8-f814-4861-8ac3-326a2cbdedd9"
+    }
+]
