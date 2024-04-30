@@ -1,7 +1,7 @@
 [
     {
         "title": "Producto 4",
-        "description": "Este es el 4 producto",
+        "description": "Este es el 4 producto solo modicando la description",
         "price": 400,
         "code": "PROD-4",
         "stock": 40,
@@ -9,12 +9,13 @@
         "id": "0d89cd39-3ff9-4bbd-a4db-6ca47b6f93f9"
     },
     {
-        "title": "titulo modificado producto 2",
-        "description": "Este es el 1 producto",
-        "price": 100,
-        "code": "PROD-1",
-        "stock": 10,
+        "title": "Producto 5",
+        "description": "Este es el 5 producto",
+        "price": 300,
+        "thumbnail": "linkaimagenpro5",
+        "code": "PROD-5",
+        "stock": 30,
         "status": true,
-        "id": "24b8b3a8-f814-4861-8ac3-326a2cbdedd9"
+        "id": "cbe0371a-0d53-4c2a-a004-b267e8d484ce"
     }
 ]

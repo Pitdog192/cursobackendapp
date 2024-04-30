@@ -46,7 +46,7 @@ class ProductManager {
 
     async getProducts(limit) {
         try {
-            fs.existsSync(this.path) || (() => { throw new Error('El archivo no existe') })()
+            fs.existsSync(this.path) || (() => { throw new Error('File does not exist') })()
             let contenidoArchivo = await fs.promises.readFile(this.path, 'utf-8')
             let contenidoParsed = JSON.parse(contenidoArchivo)
             if (!contenidoParsed) throw new Error('Error al buscar todos los productos');
@@ -59,7 +59,7 @@ class ProductManager {
 
     async getProductById(id) {
         try {
-            fs.existsSync(this.path) || (() => { throw new Error('El archivo no existe') })()
+            fs.existsSync(this.path) || (() => { throw new Error('File does not exist') })()
             let contenidoArchivo = await fs.promises.readFile(this.path, 'utf-8')
             let contenidoParsed = JSON.parse(contenidoArchivo)
             let productoById = contenidoParsed.find((prod) => prod.id === id)
@@ -73,13 +73,13 @@ class ProductManager {
 
     async updateProduct(pid, newProduct) {
         try {
-            fs.existsSync(this.path) || (() => { throw new Error('El archivo no existe') })()
+            fs.existsSync(this.path) || (() => { throw new Error('File does not exist') })()
             let contenidoArchivo = await fs.promises.readFile(this.path, 'utf-8')
             let contenidoParsed = JSON.parse(contenidoArchivo)
             let productoById = contenidoParsed.find((prod) => prod.id === pid)
             if(!productoById) throw new Error(`Solicitated product with id: ${pid} does not exist`)
             const {...propiedades} = productoById
-            if(newProduct.hasOwnProperty('id')) throw new Error(`El id no se puede modificar`)
+            if(newProduct.hasOwnProperty('id')) throw new Error(`ID cannot be moddified`)
             let updatedProduct = {
                 ...propiedades,
                 ...newProduct
@@ -116,5 +116,5 @@ class ProductManager {
     }
 }
 
-const productManager = new ProductManager('./productos.json')
+const productManager = new ProductManager('./src/productos.json')
 export default productManager
