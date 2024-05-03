@@ -1,31 +1,24 @@
 [
     {
-        "title": "Producto 4",
-        "description": "Este es el 4 producto solo modicando la description",
-        "price": 400,
-        "code": "PROD-4",
-        "stock": 40,
+        "title": "Producto 1",
+        "description": "Este es el 1 producto",
+        "price": 100,
+        "thumbnails": "linkaimagenprod1",
+        "code": "PROD-1",
+        "stock": 10,
+        "category": "Papeleria",
         "status": true,
-        "id": "0d89cd39-3ff9-4bbd-a4db-6ca47b6f93f9"
+        "id": "e543c427-19da-4e60-8c21-a3ad02168d51"
     },
     {
-        "title": "Producto 5",
-        "description": "Este es el 5 producto",
-        "price": 300,
-        "thumbnail": "linkaimagenpro5",
-        "code": "PROD-5",
-        "stock": 30,
+        "title": "Producto 2",
+        "description": "Este es el 2 producto",
+        "price": 200,
+        "thumbnails": "linkaimagenprod2, link2aimagenprod2",
+        "code": "PROD-2",
+        "stock": 10,
+        "category": "Papeleria",
         "status": true,
-        "id": "cbe0371a-0d53-4c2a-a004-b267e8d484ce"
-    },
-    {
-        "title": "Producto 3",
-        "description": "Este es el 3 producto",
-        "price": 300,
-        "thumbnail": "linkaimagenprod3",
-        "code": "PROD-3",
-        "stock": 30,
-        "status": true,
-        "id": "ba9d3340-fedf-48a7-baaf-b095c7e27df4"
+        "id": "62e33aed-5804-4bc3-929c-2f2a2a44e82a"
     }
 ]

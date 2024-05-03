@@ -1,0 +1,11 @@
+body{
+    text-align: center;
+}
+
+.product-table{
+    text-align: center;
+    margin: auto;
+    & td{
+        padding: 2px 15px;
+    }
+}

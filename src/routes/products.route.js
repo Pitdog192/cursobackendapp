@@ -7,7 +7,7 @@ productRouter.get('/', async (req, res)=>{
     try{
         let {limit} = req.query
         let allProducts = await productManager.getProducts(limit)
-        res.send(allProducts)
+        res.render('home', {allProducts})
     } catch (error){
         res.status(500).send('Error to get products')
     }

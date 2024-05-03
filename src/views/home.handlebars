@@ -1,0 +1,33 @@
+<h1>Todos los productos</h1>
+<table class="product-table">
+    <thead>
+        <tr>
+            <td>TITLE</td>
+            <td>DESCRIPTION</td>
+            <td>PRICE</td>
+            <td>CODE</td>
+            <td>STOCK</td>
+            <td>CATEGORY</td>
+            <td>STATUS</td>
+            <td>ID</td>
+        </tr>
+    </thead>
+    <tbody>
+        {{#if allProducts}}
+            {{#each allProducts}}
+                <tr>
+                    <td>{{this.title}}</td>
+                    <td>{{this.description}}</td>
+                    <td>{{this.price}}</td>
+                    <td>{{this.code}}</td>
+                    <td>{{this.stock}}</td>
+                    <td>{{this.category}}</td>
+                    <td>{{this.status}}</td>
+                    <td>{{this.id}}</td>
+                </tr>
+            {{/each}}
+        {{else}}
+            <h1>Sin productos</h1>
+        {{/if}}
+    </tbody>
+</table>
