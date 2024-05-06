@@ -1,0 +1,53 @@
+<h1>Vista websockets</h1>
+<form id="product-form-add">
+    <div>
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required>
+    </div>
+    <div>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" rows="3" required></textarea>
+    </div>
+    <div>
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" required>
+    </div>
+    <div>
+        <label for="code">Code:</label>
+        <input type="text" id="code" name="code" required>
+    </div>
+    <div>
+        <label for="stock">Stock:</label>
+        <input type="number" id="stock" name="stock" required>
+    </div>
+    <div>
+        <label for="category">Category:</label>
+        <input type="text" id="category" name="category" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Create Product</button>
+</form>
+<form id="product-form-delete">
+    <div>
+        <label for="id">ID:</label>
+        <input type="text" id="id" name="id" required>
+    </div>
+    <button type="submit">Delete product</button>
+</form>
+<table class="product-table">
+    <thead>
+        <tr>
+            <td>TITLE</td>
+            <td>DESCRIPTION</td>
+            <td>PRICE</td>
+            <td>CODE</td>
+            <td>STOCK</td>
+            <td>CATEGORY</td>
+            <td>STATUS</td>
+            <td>ID</td>
+        </tr>
+    </thead>
+    <tbody id="body-table">
+    </tbody>
+</table>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/index.js"></script>

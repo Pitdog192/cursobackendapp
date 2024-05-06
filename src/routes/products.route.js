@@ -8,7 +8,6 @@ productRouter.get('/', async (req, res)=>{
         let {limit} = req.query
         let allProducts = await productManager.getProducts(limit)
         res.render('home', {allProducts})
-        console.log("test")
     } catch (error){
         res.status(500).send('Error to get products')
     }
