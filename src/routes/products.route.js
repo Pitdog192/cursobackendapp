@@ -27,7 +27,7 @@ productRouter.post('/', async (req, res)=>{
     let product = req.body
     try {
         let newProduct = await productManager.addProduct(product)
-        res.send(newProduct)
+        res.send({message: "Producto creado con éxito"})
     } catch (error) {
         console.log(error)
         res.status(404).send({ error: error.message })
@@ -47,7 +47,7 @@ productRouter.put('/:pid', async (req, res) =>{
 productRouter.delete('/:pid', async (req,res) => {
     try {
         await productManager.deleteProduct(req.params.pid)
-        res.send("Producto eliminado con éxito")
+        res.send({message: "Producto eliminado con éxito"})
     } catch (error) {
         console.log(error)
         res.status(500).send({ error: error.message })
