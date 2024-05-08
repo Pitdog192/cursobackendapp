@@ -29,16 +29,16 @@ app.get('*', (req, res) => {
 
 socketServer.on('connection', async (socket) => {
     console.log(`Cliente conectado`)
+
     const products = await productManager.getProducts()
     socket.emit('productos', products)
+    
     socket.on('newProduct', async (data) => {
-        // await productManager.addProduct(data)
+        await productManager.addProduct(data)
         socket.emit('productos', products)  
-        console.log(data)
     })
     socket.on('deleteProduct', async (id) => {
-        // await productManager.deleteProduct(id)
+        await productManager.deleteProduct(id)
         socket.emit('productos', products)
-        console.log(id)
     })
 })
