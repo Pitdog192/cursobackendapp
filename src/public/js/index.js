@@ -29,7 +29,8 @@ function updateTable(products) {
                             <td>${prod.stock}</td>
                             <td>${prod.category}</td>
                             <td>${prod.status}</td>
-                            <td>${prod.id}</td>`
+                            <td>${prod.id}</td>
+                            <td><img src="${prod.thumbnail}" width=200rem alt="img"></td>`
         bodyTable.appendChild(filaT)
     })
 }

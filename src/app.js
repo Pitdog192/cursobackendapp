@@ -3,7 +3,7 @@ import cartRouter from './routes/carts.router.js'
 import productRouter from './routes/products.route.js'
 import viewsRouter from './routes/views.router.js'
 import handlebars from 'express-handlebars'
-import __dirname from './utils.js'
+import {__dirname} from './utils.js'
 import { Server } from 'socket.io'
 import productManager from './container/productos.js'
 
