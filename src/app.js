@@ -5,12 +5,14 @@ import viewsRouter from './routes/views.router.js'
 import handlebars from 'express-handlebars'
 import {__dirname} from './utils.js'
 import { Server } from 'socket.io'
-import productManager from './container/productos.js'
+import productManager from './dao/container/productos.js'
+import dbconnection from './db/mongodbcon.js'
 
-const PORT = 8080
+const PORT = process.env.PORT || 8080
 const app = express()
 const httpServer = app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`))
 const socketServer = new Server(httpServer)
+dbconnection()
 
 app.engine('handlebars', handlebars.engine())
 app.set('views', __dirname+'/views')
