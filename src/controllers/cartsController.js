@@ -1,43 +1,45 @@
-import cartManager from "../dao/container/carts.js"
-import cartModel from "../dao/models/cartModel.js"
-import productModel from '../dao/models/productModel.js'
-import { v4 as uuidv4 } from 'uuid'
+// import cartManager from "../dao/fileSystem/container/carts.js"
+import cartModel from "../dao/mongoDb/models/cartModel.js"
+import DaoMongoDB from "../dao/mongoDb/DaoMongoDb.js"
+import { productDao } from "./productsController.js"
 
-const createCart = async (req, res) => {
+const cartDao = new DaoMongoDB(cartModel)
+
+const createCart = async (req, res, next) => {
     try {
-        await cartModel.create({ cid: uuidv4() })
+        await cartDao.create()
         // await cartManager.createCart()
         res.send(`Carrito creado con éxito`)
     } catch (error) {
-        res.status(404).send({ error: error.message })
+        next(error)
     }
 }
 
-const getCartById = async(req,res) => {
+const getCartById = async(req,res, next) => {
     try {
         let cartId = req.params.cid
-        let cartProducts = await cartModel.findOne({ cid: cartId })
+        let cartProducts = await cartDao.getById(cartId)
         // let cartProducts = await cartManager.listCart(req.params.cid)
         res.send(cartProducts.products)
     } catch (error) {
-        res.status(404).send({ error: error.message })
+        next(error)
     }
 }
 
-const insertProduct = async(req,res) => {
+const insertProduct = async(req,res, next) => {
     try {
         let pid = req.params.pid
-        let product = await productModel.findOne({ pid: pid})
+        let product = await productDao.getById(pid)
         if (!product) return res.status(404).send({ error: "Producto no encontrado" })
         let cartId = req.params.cid
-        let cart = await cartModel.findOne({ cid: cartId })
+        let cart = await cartDao.getById(cartId)
         if (!cart) return res.status(404).send({ error: "Carrito no encontrado" })
-        cart.products.push(product)
+        cart.products.push({pid: product._id})
         await cart.save() // Guarda el carrito actualizado en la base de datos
         // let listCart = await cartManager.insertProduct(req.params.cid, req.params.pid)
         res.send('Producto agregado con éxito')
     } catch (error) {
-        res.status(404).send({ error: error.message })
+        next(error)
     }
 }
 
