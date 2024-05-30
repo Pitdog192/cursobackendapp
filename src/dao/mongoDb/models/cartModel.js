@@ -4,7 +4,13 @@ const { Schema } = mongoose
 
 const cartSchema = new Schema({
     cid: {type: String, default: uuidv4, unique: true},
-    products: { type: Array, default: [] }
+    products: [
+        {
+            pid: { type: Schema.Types.ObjectId, required: true },
+            quantity: { type: Number, required: true, default: 1 },
+            _id: false
+        }
+    ]
 })
 
 const cartModel = mongoose.model('carts', cartSchema)

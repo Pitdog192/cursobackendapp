@@ -34,8 +34,14 @@ const insertProduct = async(req,res, next) => {
         let cartId = req.params.cid
         let cart = await cartDao.getById(cartId)
         if (!cart) return res.status(404).send({ error: "Carrito no encontrado" })
-        cart.products.push({pid: product._id})
-        await cart.save() // Guarda el carrito actualizado en la base de datos
+        const newProduct = cart.products.find(p => p.pid.toString() === pid.toString())
+        if (!newProduct) {
+            cart.products.push({ pid: product._id, quantity: 1 })
+        } else {
+            newProduct.quantity += 1
+        }
+        const updatedCart = await cart.save()
+        console.log(updatedCart);
         // let listCart = await cartManager.insertProduct(req.params.cid, req.params.pid)
         res.send('Producto agregado con éxito')
     } catch (error) {
