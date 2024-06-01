@@ -21,7 +21,7 @@ const getProducts = async (req, res, next) => {
         let {limit} = req.query
         let allProducts = await productDao.getAll()
         // let allProducts = await productManager.getProducts(limit)
-        res.render('home', {allProducts})
+        res.send({allProducts})
     } catch (error){
         next(error)
     }
