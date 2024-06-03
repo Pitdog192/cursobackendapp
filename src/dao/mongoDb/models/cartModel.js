@@ -6,9 +6,10 @@ const cartSchema = new Schema({
     cid: {type: String, default: uuidv4, unique: true},
     products: [
         {
-            pid: { type: Schema.Types.ObjectId, required: true },
+            pid: { type: Schema.Types.ObjectId, ref: 'products', required: true },
             quantity: { type: Number, required: true, default: 1 },
-            _id: false
+            _id: false,
+            default: []
         }
     ]
 })

@@ -1,5 +1,6 @@
 import mongoose from "mongoose"
 import { v4 as uuidv4 } from 'uuid'
+import mongoosePaginate from 'mongoose-paginate-v2'
 const { Schema } = mongoose
 
 const productSchema = new Schema({
@@ -13,6 +14,9 @@ const productSchema = new Schema({
     category: {type: String, required: true},
     thumbnail: {type: String, required: false}
 })
+
+
+productSchema.plugin(mongoosePaginate)
 
 const productModel = mongoose.model('products', productSchema)
 export default productModel

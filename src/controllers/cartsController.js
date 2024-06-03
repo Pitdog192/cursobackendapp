@@ -1,7 +1,7 @@
 // import cartManager from "../dao/fileSystem/container/carts.js"
 import cartModel from "../dao/mongoDb/models/cartModel.js"
 import DaoMongoDB from "../dao/mongoDb/DaoMongoDb.js"
-import { productDao } from "./productsController.js"
+import { productDao } from "../services/productservice.js"
 
 const cartDao = new DaoMongoDB(cartModel)
 

@@ -11,9 +11,9 @@ export default class DaoMongoDB {
         }
     }
 
-    async getAll(limit) {
+    async getAll(query, limit, page, sort) {
         try {
-            return await this.model.find({}).limit(Number(limit)).lean()
+            return await this.model.paginate({query}, {page: page, limit: limit, sort: sort})
         } catch (error) {
             throw new Error(error)
         }
@@ -30,6 +30,14 @@ export default class DaoMongoDB {
     async update(id, obj) {
         try {
             return await this.model.findByIdAndUpdate(id, obj, { new: true })
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
+
+    async updateOne(filter, obj) {
+        try {
+            return await this.model.findOneAndUpdate(filter, obj, { new: true })
         } catch (error) {
             throw new Error(error)
         }

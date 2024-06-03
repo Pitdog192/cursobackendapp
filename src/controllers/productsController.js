@@ -1,13 +1,10 @@
-// import productManager from '../dao/fileSystem/container/productos.js'
-import productModel from "../dao/mongoDb/models/productModel.js"
-import DaoMongoDB from '../dao/mongoDb/DaoMongoDb.js'
 import { v4 as uuidv4 } from 'uuid'
+import productService from '../services/productservice.js'
 
-export const productDao = new DaoMongoDB(productModel)
 const getProduct = async (req, res, next) => {
     let productId = req.params.pid
     try {
-        let product = await productDao.getById(productId)
+        let product = await productService.getById(productId)
         if(!product) res.status(404).json({ msg: "Product not Found" })
         // let product = await productManager.getProductById(productId)
         res.send(product)
@@ -18,10 +15,21 @@ const getProduct = async (req, res, next) => {
 
 const getProducts = async (req, res, next) => {
     try{
-        let {limit} = req.query
-        let allProducts = await productDao.getAll()
+        let { query, page, limit, sort } = req.query
+        console.log({ query, page, limit, sort })
+        let allProducts = await productService.getAll(query, limit, page, sort)
         // let allProducts = await productManager.getProducts(limit)
-        res.send({allProducts})
+        const response = {
+            status: 'success',
+            payload: [allProducts],
+            totalPages: 10,
+            page: 1,
+            hasPrevPage: false,
+            hasNextPage: true,
+            prevLink: null,
+            nextLink: '/products?page=2',
+        }
+        res.send(response)
     } catch (error){
         next(error)
     }
@@ -30,7 +38,7 @@ const getProducts = async (req, res, next) => {
 const createProduct = async (req, res, next) => {
     try {
         const { title, category, price, code, description, stock } = req.body;
-        await productDao.create({
+        await productService.create({
         pid: uuidv4(),
         title,
         category,
@@ -49,7 +57,7 @@ const createProduct = async (req, res, next) => {
 const modifyProduct = async (req, res, next) => {
     try {
         let productId = req.params.pid
-        let updatedProduct = await productDao.update(productId, req.body)
+        let updatedProduct = await productService.update(productId, req.body)
         // let updatedProduct = await productManager.updateProduct(req.params.pid, req.body)
         updatedProduct ? res.send(updatedProduct) : res.status(404).send({ error: "Producto no encontrado" })
     } catch (error) {
@@ -60,7 +68,7 @@ const modifyProduct = async (req, res, next) => {
 const deleteProduct = async (req, res, next) => {
     try {
         let productId = req.params.pid
-        await productDao.delete(productId)
+        await productService.findByIddelete(productId)
         // await productManager.deleteProduct(req.params.pid)
         res.send({message: "Producto eliminado con éxito"})
     } catch (error) {
