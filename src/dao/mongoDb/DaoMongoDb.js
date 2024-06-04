@@ -3,6 +3,14 @@ export default class DaoMongoDB {
         this.model = model
     }
 
+    async getOne(filter) {
+        try {
+            return await this.model.findOne(filter)
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
+
     async getById(id) {
         try {
             return await this.model.findById(id)
@@ -11,9 +19,9 @@ export default class DaoMongoDB {
         }
     }
 
-    async getAll(query, limit, page, sort) {
+    async getAll(query, limit = 10 , page = 1, sortOrder) {
         try {
-            return await this.model.paginate({query}, {page: page, limit: limit, sort: sort})
+            return await this.model.paginate(query, {page: page, limit: limit, sort: sortOrder})
         } catch (error) {
             throw new Error(error)
         }
@@ -46,6 +54,17 @@ export default class DaoMongoDB {
     async delete(id) {
         try {
             return await this.model.findByIdAndDelete(id)
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
+
+    async getCartProducts(id) {
+        try {
+            return await this.model.findById(id).populate({
+                path: 'products.pid',
+                select:'title description code price status stock category',
+            })
         } catch (error) {
             throw new Error(error)
         }

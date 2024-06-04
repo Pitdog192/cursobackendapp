@@ -16,20 +16,31 @@ const getProduct = async (req, res, next) => {
 const getProducts = async (req, res, next) => {
     try{
         let { query, page, limit, sort } = req.query
-        console.log({ query, page, limit, sort })
-        let allProducts = await productService.getAll(query, limit, page, sort)
-        // let allProducts = await productManager.getProducts(limit)
-        const response = {
-            status: 'success',
-            payload: [allProducts],
-            totalPages: 10,
-            page: 1,
-            hasPrevPage: false,
-            hasNextPage: true,
-            prevLink: null,
-            nextLink: '/products?page=2',
+        let sortOrder = {}
+        if(sort) sort === 'asc' ? sortOrder.price = 1 : sortOrder.price = -1
+        let filter = {}
+        if(query){
+            if(query === 'true' || query === 'false'){
+                filter.status = query
+            } else{
+                filter.category = query
+            }
         }
-        res.send(response)
+        let allProducts = await productService.getAll(filter, limit, page, sortOrder)
+        const prev = allProducts.hasPrevPage ? `http://localhost:8080/products?page=${response.prevPage}` : null
+        const next = allProducts.hasNextPage ? `http://localhost:8080/products?page=${response.nextPage}` : null
+        res.status(200).json({
+            payload: allProducts.docs,
+            totalPages: allProducts.totalPages,
+            prevPage: allProducts.prevPage,
+            nextPage: allProducts.nextPage,
+            page: allProducts.page,
+            hasPrevPage: allProducts.hasPrevPage,
+            hasNextPage: allProducts.hasNextPage,
+            count: allProducts.totalDocs,
+            prevLink: prev,
+            nextLink: next
+        })
     } catch (error){
         next(error)
     }

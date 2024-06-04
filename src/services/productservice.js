@@ -5,15 +5,15 @@ export const productDao = new DaoMongoDB(productModel)
 
 const getById = async (id) => {
     try {
-        return await productDao.findById(id)
+        return await productDao.getById(id)
     } catch (error) {
         throw new Error(error)
     }
 }
 
-const getAll = async (query, page, limit, sort) => {
+const getAll = async (query, page, limit, sortOrder) => {
     try {
-        return await productDao.getAll(query, page, limit, sort)
+        return await productDao.getAll(query, page, limit, sortOrder)
     } catch (error) {
         throw new Error(error)
     }
