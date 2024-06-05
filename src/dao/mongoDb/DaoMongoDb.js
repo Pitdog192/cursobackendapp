@@ -69,4 +69,16 @@ export default class DaoMongoDB {
             throw new Error(error)
         }
     }
+
+    async deleteProd(cid, pid) {
+        try {
+            return await this.model.findOneAndUpdate(
+                { _id: cid },
+                { $pull: { products: { pid: pid } } },
+                { new: true }
+            )
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
 }

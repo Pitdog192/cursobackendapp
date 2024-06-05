@@ -52,7 +52,32 @@ const existProdInCart = async(cartId, prodId) => {
             products: { $elemMatch: { pid: prodId } }
         })
     } catch (error) {
-        throw new Error(error);
+        throw new Error(error)
+    }
+}
+
+const addProdToCart = async(cartId, prodId, quantity) => {
+    try {
+        const cart = await cartDao.getById(cartId)
+        if (!cart) return null
+        //Buscar si existe el prod en el carrito
+        const existProdIndex = cart.products.findIndex(p => p.product.toString() === prodId)
+        if(existProdIndex !== -1) {
+            //si el prod existe en el carrito
+            cart.products[existProdIndex].quantity = quantity;
+        } else cart.products.push({ product: prodId, quantity })
+        await cart.save()
+        return cart
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const deleteProduct = async(cid, pid) => {
+    try {
+        return await cartDao.deleteProd(cid, pid);
+    } catch (error) {
+        throw new Error(error)
     }
 }
 
@@ -62,7 +87,9 @@ const cartService = {
     update,
     updateOne,
     findByIddelete,
-    existProdInCart
+    existProdInCart,
+    addProdToCart,
+    deleteProduct
 }
 
 export default cartService
