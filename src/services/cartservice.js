@@ -58,18 +58,21 @@ const existProdInCart = async(cartId, prodId) => {
 
 const addProdToCart = async(cartId, prodId, quantity) => {
     try {
-        const cart = await cartDao.getById(cartId)
+        const cart = await cartDao.getOne({_id: cartId})
         if (!cart) return null
-        //Buscar si existe el prod en el carrito
-        const existProdIndex = cart.products.findIndex(p => p.product.toString() === prodId)
-        if(existProdIndex !== -1) {
-            //si el prod existe en el carrito
-            cart.products[existProdIndex].quantity = quantity;
-        } else cart.products.push({ product: prodId, quantity })
+        await cart.products.push({ pid: prodId, quantity })
         await cart.save()
         return cart
     } catch (error) {
         console.log(error);
+    }
+}
+
+const increaseProdQuantity = async(cid, pid, quantity) => {
+    try {
+        return await cartDao.increaseProdQuantity(cid, pid, quantity)
+    } catch (error) {
+        throw new Error(error)
     }
 }
 
@@ -89,6 +92,7 @@ const cartService = {
     findByIddelete,
     existProdInCart,
     addProdToCart,
+    increaseProdQuantity,
     deleteProduct
 }
 

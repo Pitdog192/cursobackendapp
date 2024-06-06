@@ -19,9 +19,13 @@ export default class DaoMongoDB {
         }
     }
 
-    async getAll(query, limit = 10 , page = 1, sortOrder) {
+    async getAll(query, limit = 10, page = 1, sortOrder) {
         try {
-            return await this.model.paginate(query, {page: page, limit: limit, sort: sortOrder})
+            return await this.model.paginate(query, {
+                page: page,
+                limit: limit,
+                sort: sortOrder,
+            });
         } catch (error) {
             throw new Error(error)
         }
@@ -53,7 +57,7 @@ export default class DaoMongoDB {
 
     async delete(id) {
         try {
-            return await this.model.findByIdAndDelete(id)
+            return await this.model.findByIdAndDelete(id);
         } catch (error) {
             throw new Error(error)
         }
@@ -62,9 +66,21 @@ export default class DaoMongoDB {
     async getCartProducts(id) {
         try {
             return await this.model.findById(id).populate({
-                path: 'products.pid',
-                select:'title description code price status stock category',
+                path: "products.pid",
+                select: "title description code price status stock category",
             })
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
+
+    async increaseProdQuantity(cid, pid, quantity) {
+        try {
+            return await this.model.findOneAndUpdate(
+                { _id: cid, "products.pid": pid },
+                { $set: { "products.$.quantity": quantity } },
+                { new: true }
+            );
         } catch (error) {
             throw new Error(error)
         }
@@ -75,6 +91,18 @@ export default class DaoMongoDB {
             return await this.model.findOneAndUpdate(
                 { _id: cid },
                 { $pull: { products: { pid: pid } } },
+                { new: true }
+            )
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
+
+    async removeProdToCart(cid, pid) {
+        try {
+            return await this.model.findOneAndUpdate(
+                { _id: cid },
+                { $pull: { products: { product: pid } } },
                 { new: true }
             )
         } catch (error) {

@@ -14,8 +14,8 @@ const createCart = async (req, res, next) => {
 
 const getCartById = async(req,res, next) => {
     try {
-        let cartId = req.params.cid
-        let cartProducts = await cartService.getById(cartId)
+        let {cid} = req.params
+        let cartProducts = await cartService.getById(cid)
         // let cartProducts = await cartManager.listCart(req.params.cid)
         res.send(cartProducts.products)
     } catch (error) {
@@ -25,11 +25,13 @@ const getCartById = async(req,res, next) => {
 
 const insertProduct = async(req,res, next) => {
     try {
-        let cartId = req.params.cid
-        let pid = req.params.pid
-        const findProdInCart = await cartService.existProdInCart(cartId, pid)
+        let {pid , cid} = req.params
+        const findProdInCart = await cartService.existProdInCart(cid, pid)
         if(!findProdInCart){
-            const productAdded = await cartService.addProdToCart(pid)
+            const productAdded = await cartService.addProdToCart(cid, pid)
+            console.log(productAdded);
+        } else{
+            res.send('Producto ya existente en el carrito')
         }
         // const updatedCart = await cart.save()
         res.send('Producto agregado con éxito')
@@ -38,13 +40,23 @@ const insertProduct = async(req,res, next) => {
     }
 }
 
+const increaseProdQuantity = async(req, res, next) => {
+    try {
+        let {pid , cid} = req.params
+        let {quantity} = req.body
+        const increasedQuantity = await cartService.increaseProdQuantity(cid, pid, quantity)
+        if (!increasedQuantity) res.send('Error actualizando cantidad, carrito o producto no encontrado')
+        res.send('Cantidad actualizada con éxito')
+    } catch (error) {
+        next(error)
+    }
+}
+
 const delProduct = async(req,res, next) => {
     try {
-        let {pid} = req.params
-        let {cid} = req.params
+        let {pid , cid} = req.params
         const deleteProduct = await cartService.deleteProduct(cid, pid)
-        console.log(deleteProduct)
-        if (!deleteProduct) res.json({ msg: "Product | Cart not exist" });
+        if (!deleteProduct) res.json({ msg: "Product | Cart not exist" })
     } catch (error) {
         next(error)
     }
@@ -54,6 +66,7 @@ const cartController = {
     createCart,
     getCartById,
     insertProduct,
+    increaseProdQuantity,
     delProduct
 }
 
