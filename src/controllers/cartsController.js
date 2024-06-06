@@ -44,9 +44,19 @@ const increaseProdQuantity = async(req, res, next) => {
     try {
         let {pid , cid} = req.params
         let {quantity} = req.body
-        const increasedQuantity = await cartService.increaseProdQuantity(cid, pid, quantity)
-        if (!increasedQuantity) res.send('Error actualizando cantidad, carrito o producto no encontrado')
-        res.send('Cantidad actualizada con éxito')
+        //comprobar si quantity es menor que stock y restarselo, si no avisar que no hay suficiente
+        let product = await productService.getById(pid)
+        if(product.stock < quantity) {
+            const error = new Error('Stock insuficiente para agregar producto')
+            throw error
+        } else {
+            const increasedQuantity = await cartService.increaseProdQuantity(cid, pid, quantity)
+            if (!increasedQuantity) {
+                const error = new Error('Error actualizando cantidad, carrito o producto no encontrado')
+                throw error
+            }
+            res.send('Cantidad actualizada con éxito')
+        }
     } catch (error) {
         next(error)
     }
