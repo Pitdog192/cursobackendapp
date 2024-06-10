@@ -2,6 +2,7 @@ import express, { urlencoded } from 'express'
 import cartRouter from './routes/carts.router.js'
 import productRouter from './routes/products.route.js'
 import viewsRouter from './routes/views.router.js'
+import sessionRouter from './routes/sessionRouter.js'
 import handlebars from 'express-handlebars'
 import {__dirname} from './utils.js'
 import { Server } from 'socket.io'
@@ -25,6 +26,7 @@ app.use(express.static(__dirname + '/public'));
 app.use('/api/products', productRouter)
 app.use('/api/carts', cartRouter)
 app.use('/realtimeproducts', viewsRouter)
+app.use('/api/sessions', sessionRouter)
 app.use(errorHandler);
 
 app.get('*', (req, res) => {
