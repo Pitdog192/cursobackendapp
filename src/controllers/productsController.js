@@ -13,7 +13,7 @@ const getProduct = async (req, res, next) => {
     }
 }
 
-const getProducts = async (req, res, next) => {
+const getProducts = async (req, res) => {
     try{
         let { query, page, limit, sort } = req.query
         let sortOrder = {}
@@ -42,7 +42,7 @@ const getProducts = async (req, res, next) => {
             nextLink: next
         })
     } catch (error){
-        next(error)
+        console.log(error);
     }
 }
 

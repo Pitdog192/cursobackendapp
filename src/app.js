@@ -9,25 +9,40 @@ import { Server } from 'socket.io'
 import productManager from './dao/fileSystem/container/productos.js'
 import dbconnection from './db/mongodbcon.js'
 import { errorHandler } from './middlewares/errorHandler.js';
+import MongoStore from 'connect-mongo'
+import cookieParser from 'cookie-parser'
+import session from 'express-session'
 
 const PORT = process.env.PORT || 8080
 const app = express()
 const httpServer = app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`))
 const socketServer = new Server(httpServer)
-if(process.env.PERSISTENCE == 'mongodb') dbconnection()
+if(process.env.PERSISTENCE === "mongodb") dbconnection()
+const storeConfig = {
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGO_URI,
+        crypto: { secret: process.env.SECRET },
+        ttl: 180,
+    }),
+    secret: process.env.SECRET,
+    resave: true,
+    saveUninitialized: true,
+    cookie: { maxAge: 180000 }
+}
 
 app.engine('handlebars', handlebars.engine())
 app.set('views', __dirname+'/views')
 app.set('view engine', 'handlebars')
-
 app.use(express.json())
 app.use(urlencoded({extended: true}))
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/public'))
+app.use(errorHandler)
+app.use(cookieParser())
+app.use(session(storeConfig))
 app.use('/api/products', productRouter)
 app.use('/api/carts', cartRouter)
-app.use('/realtimeproducts', viewsRouter)
+app.use('/views', viewsRouter)
 app.use('/api/sessions', sessionRouter)
-app.use(errorHandler);
 
 app.get('*', (req, res) => {
     res.render('index');

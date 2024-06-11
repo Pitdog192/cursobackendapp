@@ -1,0 +1,7 @@
+<h1>Vista Perfil</h1>
+
+{{#if user.email}}
+        <p>Email: {{ user.email }}</p>
+    {{else}}
+        <p>No se encontró un email para este usuario.</p>
+{{/if}}
