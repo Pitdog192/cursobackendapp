@@ -17,11 +17,12 @@ viewsRouter.get('/register', (req, res) => {
 viewsRouter.get('/login', (req, res) => {
     res.render('./users/login')
 })
-  
-viewsRouter.get('/profile', (req, res) => {
-    const products = productController.getProducts()
+
+viewsRouter.get('/profile', async (req, res) => {
+    const products = await productController.getProducts(req, res)
+    let envio = products.payload
     const user = req.session
-    res.render('./users/profile', {user});
+    res.render('home', { user: user, products : envio });
 })
 
 export default viewsRouter

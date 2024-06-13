@@ -1,3 +1,8 @@
+{{#if user.email}}
+        <p>Email: {{ user.email }}</p>
+    {{else}}
+        <p>No se encontró un email para este usuario.</p>
+{{/if}}
 <h1>Todos los productos</h1>
 <table class="product-table">
     <thead>
@@ -16,14 +21,15 @@
         {{#if products}}
             {{#each products}}
                 <tr>
-                    <td>{{this.title}}</td>
-                    <td>{{this.description}}</td>
-                    <td>{{this.price}}</td>
-                    <td>{{this.code}}</td>
-                    <td>{{this.stock}}</td>
-                    <td>{{this.category}}</td>
-                    <td>{{this.status}}</td>
-                    <td>{{this.pid}}</td>
+                    <td>test</td>
+                    <td>{{title}}</td>
+                    <td>{{description}}</td>
+                    <td>{{price}}</td>
+                    <td>{{code}}</td>
+                    <td>{{stock}}</td>
+                    <td>{{category}}</td>
+                    <td>{{status}}</td>
+                    <td>{{pid}}</td>
                 </tr>
             {{/each}}
         {{else}}

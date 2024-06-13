@@ -15,7 +15,8 @@ const getProduct = async (req, res, next) => {
 
 const getProducts = async (req, res) => {
     try{
-        let { query, page, limit, sort } = req.query
+        const queryObj = req.query || {};
+        let { query = '', page = 1, limit = 10, sort = 'asc' } = queryObj;
         let sortOrder = {}
         if(sort) sort === 'asc' ? sortOrder.price = 1 : sortOrder.price = -1
         let filter = {}
@@ -27,9 +28,9 @@ const getProducts = async (req, res) => {
             }
         }
         let allProducts = await productService.getAll(filter, limit, page, sortOrder)
-        const prev = allProducts.hasPrevPage ? `http://localhost:8080/products?page=${response.prevPage}` : null
-        const next = allProducts.hasNextPage ? `http://localhost:8080/products?page=${response.nextPage}` : null
-        res.status(200).json({
+        const prev = allProducts.hasPrevPage ? `http://localhost:8080/products?page=${res.prevpage}` : null
+        const next = allProducts.hasNextPage ? `http://localhost:8080/products?page=${res.nextPage}` : null
+        return {
             payload: allProducts.docs,
             totalPages: allProducts.totalPages,
             prevPage: allProducts.prevPage,
@@ -40,7 +41,7 @@ const getProducts = async (req, res) => {
             count: allProducts.totalDocs,
             prevLink: prev,
             nextLink: next
-        })
+        }
     } catch (error){
         console.log(error);
     }
