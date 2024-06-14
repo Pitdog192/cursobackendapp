@@ -1,7 +1,7 @@
 import { Router } from "express"
 import productManager from "../dao/fileSystem/container/productos.js"
 import productController from "../controllers/productsController.js"
-import { errorHandler } from "../middlewares/errorHandler.js"
+import { errorHandler, validateRole, validateAuth } from "../middlewares/errorHandler.js"
 
 const viewsRouter = Router()
 
@@ -18,11 +18,12 @@ viewsRouter.get('/login', (req, res) => {
     res.render('./users/login')
 })
 
-viewsRouter.get('/profile', async (req, res) => {
+viewsRouter.get('/profile', validateAuth, validateRole , async (req, res) => {
     const products = await productController.getProducts(req, res)
     let envio = products.payload.map(product => product.toObject());
-    const user = req.session
-    res.render('home', { user: user, products : envio });
+    const user = req.session.data.email
+    const role = req.session.data.userRole
+    res.render('home', { user: user, products : envio, role: role });
 })
 
 export default viewsRouter

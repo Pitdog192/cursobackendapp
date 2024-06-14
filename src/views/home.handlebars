@@ -1,5 +1,9 @@
-{{#if user.email}}
-        <p>Email: {{ user.email }}</p>
+{{#if user}}
+        <p>Bienvenido! {{ user }}</p>
+        <p>Rol: {{ role }}</p>
+        <form action="/api/sessions/logout" method="post">
+            <button type="submit">LogOut</button>
+        </form>
     {{else}}
         <p>No se encontró un email para este usuario.</p>
 {{/if}}

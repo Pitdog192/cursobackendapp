@@ -3,15 +3,14 @@ import userService from "../services/userservice.js"
 const register = async (req, res)=>{
     try {
         const { email, password } = req.body;
-        if(email === 'adminCoder@coder.com' && password === 'adminCoder123'){
-           const user =  await userService.createUser({
+        if(email === 'adminCoder@coder.com' && password === 'adminCod3r123'){
+            const user =  await userService.createUser({
                 ...req.body,
                 role: 'admin'
             })
             if (!user) res.status(401).json({ msg: 'El usuario admin ya existe!' })
             else res.redirect('/views/login')
         } else {
-            console.log(req.body);
             const user = await userService.createUser(req.body);
             if (!user) res.status(401).json({ msg: 'El usuario ya existe!' })
             else res.redirect('/views/login')
@@ -28,8 +27,10 @@ const login = async(req, res) => {
         if(!user){
             res.status(401).json({ msg: 'No estas autorizado' })
         } else {
-            req.session.email = email
-            req.session.password = password
+            req.session.data = {
+                email: user.email,
+                role: user.role
+            }
             res.redirect('/views/profile')
         }
     } catch (error) {
