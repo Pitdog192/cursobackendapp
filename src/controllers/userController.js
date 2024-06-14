@@ -41,7 +41,7 @@ const login = async(req, res) => {
 const logout = async(req, res) => {
     try {
         req.session.destroy()
-        res.send('logout éxitoso')
+        res.redirect('/views/login')
     } catch (error) {
         throw new Error(error)
     }
