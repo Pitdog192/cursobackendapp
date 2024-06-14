@@ -6,17 +6,16 @@ export const errorHandler = (error, req, res, next) => {
 }
 
 export const validateRole = (req, res, next) => {
-    if(req.session.data.role === 'admin'){
-        req.session.data.userRole = 'Usuario administrador'
+    if(req.session.role === 'admin'){
+        req.session.userRole = 'Usuario administrador'
     }else {
-        req.session.data.userRole = 'Usuario común'
+        req.session.userRole = 'Usuario común'
     }
     next()
 }
 
 export const validateAuth = (req, res, next) => {
-    console.log(req.session);
-    if(req.session.data && req.session.data){
+    if(req.session.email){
         next()
     }else {
         res.redirect('/views/login')

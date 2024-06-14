@@ -21,8 +21,8 @@ viewsRouter.get('/login', (req, res) => {
 viewsRouter.get('/profile', validateAuth, validateRole , async (req, res) => {
     const products = await productController.getProducts(req, res)
     let envio = products.payload.map(product => product.toObject());
-    const user = req.session.data.email
-    const role = req.session.data.userRole
+    const user = req.session.email
+    const role = req.session.userRole
     res.render('home', { user: user, products : envio, role: role });
 })
 

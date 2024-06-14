@@ -13,10 +13,9 @@ const createUser = async(user) =>{
     }
 }
 
-const searchUser = async(filter) =>{
+const searchUser = async(email) =>{
     try {
-        const {email, password} = filter
-        return await userDao.getOne({ email, password })
+        return await userDao.getOne({ email })
     } catch (error) {
         throw new Error(error)
     }
