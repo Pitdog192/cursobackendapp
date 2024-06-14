@@ -27,11 +27,11 @@ const insertProduct = async(req,res, next) => {
     try {
         let {pid , cid} = req.params
         const findProdInCart = await cartService.existProdInCart(cid, pid)
-        if(!findProdInCart){
-            const productAdded = await cartService.addProdToCart(cid, pid)
-            console.log(productAdded);
+        if(findProdInCart){
+            const error = new Error('Producto ya existente en el carrito')
+            throw error
         } else{
-            res.send('Producto ya existente en el carrito')
+            const productAdded = await cartService.addProdToCart(cid, pid)
         }
         // const updatedCart = await cart.save()
         res.send('Producto agregado con éxito')
@@ -67,6 +67,7 @@ const delProduct = async(req,res, next) => {
         let {pid , cid} = req.params
         const deleteProduct = await cartService.deleteProduct(cid, pid)
         if (!deleteProduct) res.json({ msg: "Product | Cart not exist" })
+        res.send('Producto Eliminado con éxito')
     } catch (error) {
         next(error)
     }
