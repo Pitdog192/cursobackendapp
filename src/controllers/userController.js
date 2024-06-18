@@ -42,13 +42,6 @@ const login = async(req, res) => {
     }
 }
 
-
-//**
- * 
- * @param {*} req 
- * @param {*} res 
- */
-
 const logout = async(req, res) => {
     try {
         req.session.destroy()

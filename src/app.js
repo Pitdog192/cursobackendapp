@@ -45,7 +45,7 @@ app.use('/views', viewsRouter)
 app.use('/api/sessions', sessionRouter)
 
 app.get('*', (req, res) => {
-    res.render('index');
+    res.redirect('/views/login');
 })
 
 socketServer.on('connection', async (socket) => {
