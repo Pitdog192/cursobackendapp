@@ -12,6 +12,8 @@ import { errorHandler } from './middlewares/errorHandler.js';
 import MongoStore from 'connect-mongo'
 import cookieParser from 'cookie-parser'
 import session from 'express-session'
+import passport from 'passport'
+import './middlewares/passport/passportLocal.js'
 
 const PORT = process.env.PORT || 8080
 const app = express()
@@ -39,6 +41,10 @@ app.use(express.static(__dirname + '/public'))
 app.use(errorHandler)
 app.use(cookieParser())
 app.use(session(storeConfig))
+//PASSPORT
+app.use(passport.initialize())
+app.use(passport.session())
+
 app.use('/api/products', productRouter)
 app.use('/api/carts', cartRouter)
 app.use('/views', viewsRouter)

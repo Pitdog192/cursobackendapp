@@ -1,17 +1,7 @@
 import DaoMongoDB from "../dao/mongoDb/DaoMongoDb.js"
 import userModel from "../dao/mongoDb/models/userModel.js"
+import { createHash, isValidPassword } from "../utils.js";
 const userDao = new DaoMongoDB(userModel)
-
-const createUser = async(user) =>{
-    try {
-        const { email } = user
-        const existUser = await userDao.getOne({ email })
-        if(!existUser) return await userDao.create(user)
-        else return null
-    } catch (error) {
-        throw new Error(error)
-    }
-}
 
 const searchUser = async(email) =>{
     try {
@@ -21,9 +11,44 @@ const searchUser = async(email) =>{
     }
 }
 
+const searchUserById = async(id) =>{
+    try {
+        return await userDao.getById(id)
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
+const createUser = async(user) =>{
+    try {
+        const { email, password } = user;
+        const existUser = await searchUser(email)
+        if (!existUser) {
+            if (email === "adminCoder@coder.com" && password === "adminCod3r123") {
+                const newUser = await userDao.create({
+                    ...user,
+                    password: createHash(password),
+                    role: "admin",
+                })
+                return newUser
+            } else {
+            const newUser = await userDao.create({
+                ...user,
+                password: createHash(password),
+            })
+            return newUser
+        }
+        } else return null
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
+
 const userService = {
     createUser,
-    searchUser
+    searchUser,
+    searchUserById
 }
 
 export default userService
