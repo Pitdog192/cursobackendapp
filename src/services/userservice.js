@@ -44,9 +44,23 @@ const createUser = async(user) =>{
     }
 }
 
+const loginUser = async (user) => {
+    try {
+        const { email, password } = user
+        const userExist = await searchUser(email)
+        if (!userExist) return null
+        const passValid = isValidPassword(password, userExist)
+        if (!passValid) return null
+        return userExist
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
 
 const userService = {
     createUser,
+    loginUser,
     searchUser,
     searchUserById
 }

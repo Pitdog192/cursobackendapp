@@ -5,7 +5,7 @@ import passport from "passport";
 const sessionRouter = Router()
 
 sessionRouter.post('/register', passport.authenticate('register', {
-    successRedirect: '/views/profile',
+    successRedirect: '/views/login',
     failureRedirect: '/register',
     failureFlash: true
 }), userController.register)

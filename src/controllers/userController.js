@@ -1,6 +1,6 @@
 import userService from "../services/userservice.js"
 
-const register = async (req, res)=>{
+const register = async (req, res, next)=>{
     try {
         console.log("entro al register del controller");
         res.json({
@@ -12,20 +12,19 @@ const register = async (req, res)=>{
     }
 }
 
-const login = async(req, res) => {
+const login = async(req, res, next) => {
     try {
-        const { email, password } = req.body
-        const user = await userService.searchUser(email)
-        if(!user) res.status(401).json({ msg: 'No estas autorizado' })
-        if(isValidPassword(password, user)){
-            req.session.email = email;
-            req.session.role = user.role;
-            res.redirect("/views/profile");
-        } else {
-            res.status(401).json({ msg: "Autenticación fallida" });
-        }
+        let id = null;
+        if(req.session.passport && req.session.passport.user) id = req.session.passport.user;
+        const user = await userService.searchUserById(id);
+        if(!user) res.status(401).json({ msg: 'Error de autenticacion' });
+        const { email, role } = user;
+        req.session.email = email
+        req.session.role = role
+        console.log(req.session);
+        res.redirect('/views/profile')
     } catch (error) {
-        throw new Error(error)
+        next(error)
     }
 }
 

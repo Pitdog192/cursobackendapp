@@ -15,21 +15,19 @@ passport.use('register', new LocalStrategy(strategyConfig, async (req, email, pa
         const newUser = await userService.createUser(req.body)
         return done(null, newUser);
     } catch (error) {
-        console.log(error)
         return done(null, false)
     }
 }))
 
 passport.use('login', new LocalStrategy(strategyConfig, async (req, email, password, done) => {
     try {
-        const userLogin = await services.login({ email, password })
+        const userLogin = await userService.loginUser({ email, password })
         if(!userLogin){
             req.session.destroy()
-            return done(null, false, { message: 'Alto ahí Rufián ⛔' })
+            return done(null, false, { message: 'Sin autorizar' })
         } 
         return done(null, userLogin)
     } catch (error) {
-        console.log(error)
         return done(error)
     }
 }))
@@ -40,9 +38,9 @@ passport.serializeUser((user, done)=>{
 
 passport.deserializeUser(async(id, done)=>{
     try {
-        const user = await userService.searchUserById(id);
-        return done(null, user);
+        const user = await userService.searchUserById(id)
+        return done(null, user)
     } catch (error) {
         done(error)
     }
-});
+})
