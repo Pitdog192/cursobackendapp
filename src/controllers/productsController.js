@@ -36,7 +36,7 @@ const getProducts = async (req, res) => {
             prevPage: allProducts.prevPage,
             nextPage: allProducts.nextPage,
             page: allProducts.page,
-            hasPrevPage: allProducts.hasPrevPage,
+            hasPrevPage: allProducts.hasPrevPage, 
             hasNextPage: allProducts.hasNextPage,
             count: allProducts.totalDocs,
             prevLink: prev,

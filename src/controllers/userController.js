@@ -28,6 +28,17 @@ const login = async(req, res, next) => {
     }
 }
 
+const githubLogin = async(req, res, next)=>{
+    try {
+        const { email } = req.user;
+        req.session.email = email
+        res.redirect('/views/profile')
+    } catch (error) {
+        next(error);
+    }
+}
+
+
 const logout = async(req, res) => {
     try {
         req.session.destroy()
@@ -40,6 +51,7 @@ const logout = async(req, res) => {
 const userController = {
     register,
     login,
+    githubLogin,
     logout
 }
 

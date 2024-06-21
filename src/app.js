@@ -14,6 +14,7 @@ import cookieParser from 'cookie-parser'
 import session from 'express-session'
 import passport from 'passport'
 import './middlewares/passport/passportLocal.js'
+import './middlewares/passport/passportGithub.js'
 
 const PORT = process.env.PORT || 8080
 const app = express()

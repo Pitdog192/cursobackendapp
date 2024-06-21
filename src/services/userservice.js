@@ -21,6 +21,7 @@ const searchUserById = async(id) =>{
 
 const createUser = async(user) =>{
     try {
+        console.log(user);
         const { email, password } = user;
         const existUser = await searchUser(email)
         if (!existUser) {

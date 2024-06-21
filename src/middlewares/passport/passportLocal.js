@@ -1,5 +1,5 @@
-import passport from "passport";
-import { Strategy as LocalStrategy } from 'passport-local';
+import passport from "passport"                                                   
+import { Strategy as LocalStrategy } from 'passport-local'
 import userService from "../../services/userservice.js"
 
 const strategyConfig = {
