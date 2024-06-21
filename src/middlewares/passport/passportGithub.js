@@ -15,7 +15,7 @@ passport.use('github', new GithubStrategy(strategyConfig, async (accessToken, re
     const newUser = await userService.createUser({
         email: email,
         first_name : profile._json.name,
-        password: profile._json.node_id
+        password: null
     })
     return done(null, newUser)
     }

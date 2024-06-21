@@ -7,7 +7,8 @@ const UserSchema = new Schema({
     email: {type: String, required: true, unique: true},
     age: {type: Number,},
     password: {type: String},
-    role: {type: String, default: 'user'}
+    role: {type: String, default: 'user'},
+    githubUser: {type: Boolean}
 })
 
 const userModel = mongoose.model('users', UserSchema)

@@ -21,24 +21,31 @@ const searchUserById = async(id) =>{
 
 const createUser = async(user) =>{
     try {
-        console.log(user);
         const { email, password } = user;
         const existUser = await searchUser(email)
         if (!existUser) {
-            if (email === "adminCoder@coder.com" && password === "adminCod3r123") {
+            if(!password){
                 const newUser = await userDao.create({
                     ...user,
-                    password: createHash(password),
-                    role: "admin",
+                    githubUser: true
                 })
                 return newUser
             } else {
-            const newUser = await userDao.create({
-                ...user,
-                password: createHash(password),
-            })
-            return newUser
-        }
+                if (email === "adminCoder@coder.com" && password === "adminCod3r123") {
+                    const newUser = await userDao.create({
+                        ...user,
+                        password: createHash(password),
+                        role: "admin",
+                    })
+                    return newUser
+                } else {
+                const newUser = await userDao.create({
+                    ...user,
+                    password: createHash(password),
+                })
+                return newUser
+            }
+            }
         } else return null
     } catch (error) {
         throw new Error(error)
