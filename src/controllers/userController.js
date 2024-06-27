@@ -21,7 +21,6 @@ const login = async(req, res, next) => {
         const { email, role } = user;
         req.session.email = email
         req.session.role = role
-        console.log(req.session);
         res.redirect('/views/profile')
     } catch (error) {
         next(error)

@@ -23,7 +23,7 @@ viewsRouter.get('/profile', validateAuth, validateRole , async (req, res) => {
     let envio = products.payload.map(product => product.toObject())
     const user = req.session.email
     const role = req.session.userRole
-    res.render('home', { user: user, products : envio, role: role })
+    res.render('home', { user: user, products : envio, role: role, nextPage: products.nextLink, prevPage: products.prevLink })
 })
 
 export default viewsRouter

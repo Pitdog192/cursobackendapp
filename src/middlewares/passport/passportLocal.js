@@ -13,7 +13,7 @@ passport.use('register', new LocalStrategy(strategyConfig, async (req, email, pa
         let user = await userService.searchUser(email)
         if(user) return done(null, false)
         const newUser = await userService.createUser(req.body)
-        return done(null, newUser);
+        return done(null, newUser)
     } catch (error) {
         return done(null, false)
     }

@@ -25,7 +25,7 @@ export default class DaoMongoDB {
                 page: page,
                 limit: limit,
                 sort: sortOrder,
-            });
+            })
         } catch (error) {
             throw new Error(error)
         }

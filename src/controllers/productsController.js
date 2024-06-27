@@ -28,9 +28,9 @@ const getProducts = async (req, res) => {
             }
         }
         let allProducts = await productService.getAll(filter, limit, page, sortOrder)
-        const prev = allProducts.hasPrevPage ? `http://localhost:8080/products?page=${res.prevpage}` : null
-        const next = allProducts.hasNextPage ? `http://localhost:8080/products?page=${res.nextPage}` : null
-        return {
+        const prev = allProducts.hasPrevPage ? `http://localhost:8080/views/profile?page=${allProducts.prevpage}` : null
+        const next = allProducts.hasNextPage ? `http://localhost:8080/views/profile?page=${allProducts.nextPage}` : null
+        return{
             payload: allProducts.docs,
             totalPages: allProducts.totalPages,
             prevPage: allProducts.prevPage,

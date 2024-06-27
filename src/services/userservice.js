@@ -57,6 +57,7 @@ const loginUser = async (user) => {
         const { email, password } = user
         const userExist = await searchUser(email)
         if (!userExist) return null
+        if(!userExist.password) return null
         const passValid = isValidPassword(password, userExist)
         if (!passValid) return null
         return userExist
