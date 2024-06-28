@@ -8,6 +8,7 @@ const UserSchema = new Schema({
     age: {type: Number,},
     password: {type: String},
     role: {type: String, default: 'user'},
+    cart: {type: String},
     githubUser: {type: Boolean}
 })
 

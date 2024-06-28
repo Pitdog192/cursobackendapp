@@ -18,4 +18,6 @@ sessionRouter.get('/githubprofile', passport.authenticate( 'github'), userContro
 
 sessionRouter.post('/logout', userController.logout)
 
+sessionRouter.get('/current', )
+
 export default sessionRouter
