@@ -1,6 +1,7 @@
 import { Router } from "express"
 import userController from "../controllers/userController.js"
 import passport from "passport";
+import { checkAuth } from "../middlewares/jwt.js";
 
 const sessionRouter = Router()
 
@@ -18,6 +19,6 @@ sessionRouter.get('/githubprofile', passport.authenticate( 'github'), userContro
 
 sessionRouter.post('/logout', userController.logout)
 
-sessionRouter.get('/current', )
+sessionRouter.get('/current', checkAuth, userController.current)
 
 export default sessionRouter

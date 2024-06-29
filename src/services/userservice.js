@@ -1,6 +1,6 @@
 import DaoMongoDB from "../dao/mongoDb/DaoMongoDb.js"
 import userModel from "../dao/mongoDb/models/userModel.js"
-import { createHash, isValidPassword } from "../utils.js";
+import { createHash, isValidPassword } from "../utils.js"
 const userDao = new DaoMongoDB(userModel)
 
 const searchUser = async(email) =>{

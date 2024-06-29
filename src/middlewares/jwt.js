@@ -1,35 +1,26 @@
 import jwt from "jsonwebtoken"
-import userService from "../services/userservice";
+import userService from "../services/userservice.js"
+import { ENV_KEYS } from "../app.js"
 
-export const generateToken = (user, time = "5m") => {
-    const payload = {
-        userId: user._id,
-    }
-
-    return jwt.sign(payload, process.env.SECRET_KEY, {
-        expiresIn: time,
-    })
+export const  generateToken = (user, time = '5m')  => {
+    const payload = {userId: user._id}
+    return jwt.sign(payload, process.env.SECRET, { expiresIn: time });
 }
 
 export const checkAuth = async (req, res, next) => {
     try {
-        const authHeader = req.get("Authorization")
-        if (!authHeader) res.status(403).json({ msg: "Unhautorized" })
-        const token = authHeader.split(" ")[1]
-        const decode = jwt.verify(token, process.env.SECRET_KEY)
+        const authCokie = req.cookies.Authorization
+        if (!authCokie) return res.status(403).json({ msg: "Unhautorized" })
+        const decode = jwt.verify(authCokie, ENV_KEYS.SECRET)
         const user = await userService.searchUserById(decode.userId)
-        if (!user) res.status(404).json({ msg: "User not found" })
-        //REFRESH TOKEN
-        // Verificar si el token está a punto de expirar
-        const now = Math.floor(Date.now() / 1000) // Tiempo actual en segundos
-        const tokenExp = decode.exp // Tiempo de expiración del token
-        const timeUntilExp = tokenExp - now // Tiempo hasta la expiración en segundos
+        if (!user) return res.status(404).json({ msg: "User not found" })
+        //renovar token 
+        const now = Math.floor(Date.now() / 1000) 
+        const tokenExp = decode.exp 
+        const timeUntilExp = tokenExp - now 
         if (timeUntilExp <= 300) {
-            // 300 segundos = 5 minutos
-            // Generar un nuevo token con un tiempo de expiración renovado
             const newToken = generateToken(user, "5m")
-            console.log(">>>>>>SE REFRESCÓ EL TOKEN")
-            res.set("Authorization", `Bearer ${newToken}`) // Agregar el nuevo token al encabezado
+            res.set("Authorization", `Bearer ${newToken}`)
         }
         req.user = user
         next()

@@ -21,16 +21,33 @@ const app = express()
 const httpServer = app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`))
 const socketServer = new Server(httpServer)
 if(process.env.PERSISTENCE === "mongodb") dbconnection()
+
+export const ENV_KEYS = {
+    MONGO_URI: process.env.MONGO_URI,
+    PORT: process.env.PORT,
+    PERSISTENCE: process.env.PERSISTENCE,
+    SECRET: process.env.SECRET,
+    CLIENT_ID: process.env.CLIENT_ID,
+    CLIENT_SECRET: process.env.CLIENT_SECRET,
+    CALLBACK_URL: process.env.CALLBACK_URL,
+    JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN,
+}
+    
 const storeConfig = {
     store: MongoStore.create({
-        mongoUrl: process.env.MONGO_URI,
-        crypto: { secret: process.env.SECRET },
+        mongoUrl: ENV_KEYS.MONGO_URI,
+        crypto: { secret: ENV_KEYS.SECRET },
         ttl: 180,
     }),
-    secret: process.env.SECRET,
+    secret: ENV_KEYS.SECRET,
     resave: true,
     saveUninitialized: true,
     cookie: { maxAge: 180000 }
+}
+
+export const generateToken = (user, time = "5m") => {
+    const payload = {userId: user._id}
+    return jwt.sign(payload, ENV_KEYS.SECRET, { expiresIn: time,})
 }
 
 app.engine('handlebars', handlebars.engine())

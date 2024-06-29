@@ -25,7 +25,7 @@ passport.use('login', new LocalStrategy(strategyConfig, async (req, email, passw
         if(!userLogin){
             req.session.destroy()
             return done(null, false, { message: 'Sin autorizar' })
-        } 
+        }
         return done(null, userLogin)
     } catch (error) {
         return done(error)
