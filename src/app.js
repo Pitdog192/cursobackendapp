@@ -15,31 +15,20 @@ import session from 'express-session'
 import passport from 'passport'
 import './middlewares/passport/passportLocal.js'
 import './middlewares/passport/passportGithub.js'
+import { config } from './config/config.js'
 
-const PORT = process.env.PORT || 8080
+const PORT = config.PORT || 8080
 const app = express()
 const httpServer = app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`))
 const socketServer = new Server(httpServer)
-if(process.env.PERSISTENCE === "mongodb") dbconnection()
-
-export const ENV_KEYS = {
-    MONGO_URI: process.env.MONGO_URI,
-    PORT: process.env.PORT,
-    PERSISTENCE: process.env.PERSISTENCE,
-    SECRET: process.env.SECRET,
-    CLIENT_ID: process.env.CLIENT_ID,
-    CLIENT_SECRET: process.env.CLIENT_SECRET,
-    CALLBACK_URL: process.env.CALLBACK_URL,
-    JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN,
-}
-    
+if(config.PERSISTENCE === "mongodb") dbconnection()
 const storeConfig = {
     store: MongoStore.create({
-        mongoUrl: ENV_KEYS.MONGO_URI,
-        crypto: { secret: ENV_KEYS.SECRET },
+        mongoUrl: config.MONGO_URI,
+        crypto: { secret: config.SECRET },
         ttl: 180,
     }),
-    secret: ENV_KEYS.SECRET,
+    secret: config.SECRET,
     resave: true,
     saveUninitialized: true,
     cookie: { maxAge: 180000 }

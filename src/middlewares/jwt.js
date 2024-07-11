@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken"
 import userService from "../services/userservice.js"
-import { ENV_KEYS } from "../app.js"
+import { config } from "../config/config.js"
 
 export const  generateToken = (user, time = '5m')  => {
     const payload = {userId: user._id}
@@ -11,7 +11,7 @@ export const checkAuth = async (req, res, next) => {
     try {
         const authCokie = req.cookies.Authorization
         if (!authCokie) return res.status(403).json({ msg: "Unhautorized" })
-        const decode = jwt.verify(authCokie, ENV_KEYS.SECRET)
+        const decode = jwt.verify(authCokie, config.SECRET)
         const user = await userService.searchUserById(decode.userId)
         if (!user) return res.status(404).json({ msg: "User not found" })
         //renovar token 

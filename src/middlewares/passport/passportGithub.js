@@ -1,11 +1,12 @@
 import { Strategy as GithubStrategy } from "passport-github2"
 import passport from "passport"
 import userService from "../../services/userservice.js"
+import { config } from "../../config/config.js"
 
 const strategyConfig = {
-    clientID: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: process.env.CALLBACK_URL
+    clientID: config.CLIENT_ID,
+    clientSecret: config.CLIENT_SECRET,
+    callbackURL: config.CALLBACK_URL
 }
 
 passport.use('github', new GithubStrategy(strategyConfig, async (accessToken, refreshToken, profile, done) => {
