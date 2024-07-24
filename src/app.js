@@ -7,12 +7,13 @@ import handlebars from 'express-handlebars'
 import {__dirname} from './utils.js'
 import { Server } from 'socket.io'
 import productManager from './dao/fileSystem/container/productos.js'
-import dbconnection from './db/mongodbcon.js'
+import ConnectMongoDB from './db/mongodbcon.js'
 import { errorHandler } from './middlewares/errorHandler.js';
 import MongoStore from 'connect-mongo'
 import cookieParser from 'cookie-parser'
 import session from 'express-session'
 import passport from 'passport'
+import cors from 'cors';
 import './middlewares/passport/passportLocal.js'
 import './middlewares/passport/passportGithub.js'
 import { config } from './config/config.js'
@@ -21,7 +22,13 @@ const PORT = config.PORT || 8080
 const app = express()
 const httpServer = app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`))
 const socketServer = new Server(httpServer)
-if(config.PERSISTENCE === "mongodb") dbconnection()
+
+//HAY QUE MOVERLO A LA CAPA DE PERSISTENCIA
+if(config.PERSISTENCE === "mongodb"){
+    const connectMongo = new ConnectMongoDB()
+    connectMongo.initMongoDB()  
+}
+
 const storeConfig = {
     store: MongoStore.create({
         mongoUrl: config.MONGO_URI,
@@ -48,6 +55,7 @@ app.use(express.static(__dirname + '/public'))
 app.use(errorHandler)
 app.use(cookieParser())
 app.use(session(storeConfig))
+app.use(cors({origin: config.FRONT_ORIGIN}))
 //PASSPORT
 app.use(passport.initialize())
 app.use(passport.session())
