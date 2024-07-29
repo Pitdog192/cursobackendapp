@@ -1,5 +1,5 @@
 import { Router } from "express"
-import productManager from "../dao/fileSystem/container/productos.js"
+import productManager from "../persistance/dao/fileSystem/container/productos.js"
 import productController from "../controllers/productsController.js"
 import { errorHandler, validateRole, validateAuth } from "../middlewares/errorHandler.js"
 

@@ -1,9 +1,5 @@
-import DaoMongoDB from "../dao/mongoDb/DaoMongoDb.js"
-import productModel from "../dao/mongoDb/models/productModel.js"
-import cartModel from "../dao/mongoDb/models/cartModel.js"
-
-export const productDao = new DaoMongoDB(productModel)
-export const cartDao = new DaoMongoDB(cartModel)
+import persistence from '../persistance/dao/factory.js';
+const { cartDao } = persistence;
 
 const getById = async (id) => {
     try {

@@ -6,8 +6,7 @@ import sessionRouter from './routes/sessionRouter.js'
 import handlebars from 'express-handlebars'
 import {__dirname} from './utils.js'
 import { Server } from 'socket.io'
-import productManager from './dao/fileSystem/container/productos.js'
-import ConnectMongoDB from './db/mongodbcon.js'
+import productManager from './persistance/dao/fileSystem/container/productos.js'
 import { errorHandler } from './middlewares/errorHandler.js';
 import MongoStore from 'connect-mongo'
 import cookieParser from 'cookie-parser'
@@ -22,12 +21,6 @@ const PORT = config.PORT || 8080
 const app = express()
 const httpServer = app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`))
 const socketServer = new Server(httpServer)
-
-//HAY QUE MOVERLO A LA CAPA DE PERSISTENCIA
-if(config.PERSISTENCE === "mongodb"){
-    const connectMongo = new ConnectMongoDB()
-    connectMongo.initMongoDB()  
-}
 
 const storeConfig = {
     store: MongoStore.create({

@@ -1,7 +1,6 @@
-import DaoMongoDB from "../dao/mongoDb/DaoMongoDb.js"
-import userModel from "../dao/mongoDb/models/userModel.js"
 import { createHash, isValidPassword } from "../utils.js"
-const userDao = new DaoMongoDB(userModel)
+import persistence from '../persistance/dao/factory.js';
+const { userDao } = persistence;
 
 const searchUser = async(email) =>{
     try {

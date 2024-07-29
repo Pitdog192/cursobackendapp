@@ -13,7 +13,7 @@ class ProductManager {
         }
     }
 
-    async addProduct(newProduct) {
+    async create(newProduct) {
         if (!fs.existsSync(this.path)) {
             try {
                 // Crear el archivo si no existe
@@ -45,7 +45,7 @@ class ProductManager {
         }
     }
 
-    async getProducts(limit) {
+    async getAll(limit) {
         try {
             fs.existsSync(this.path) || (() => { throw new Error('File does not exist') })()
             let contenidoArchivo = await fs.promises.readFile(this.path, 'utf-8')
@@ -58,7 +58,7 @@ class ProductManager {
         }
     }
 
-    async getProductById(id) {
+    async getById(id) {
         try {
             fs.existsSync(this.path) || (() => { throw new Error('File does not exist') })()
             let contenidoArchivo = await fs.promises.readFile(this.path, 'utf-8')
@@ -72,7 +72,7 @@ class ProductManager {
         }
     }
 
-    async updateProduct(pid, newProduct) {
+    async update(pid, newProduct) {
         try {
             fs.existsSync(this.path) || (() => { throw new Error('File does not exist') })()
             let contenidoArchivo = await fs.promises.readFile(this.path, 'utf-8')
@@ -95,7 +95,7 @@ class ProductManager {
         }
     }
 
-    async deleteProduct(id) {
+    async findByIddelete(id) {
         try {
             fs.existsSync(this.path) || (() => { throw new Error('El archivo no existe') })()
             let contenidoArchivo = await fs.promises.readFile(this.path, 'utf-8')
