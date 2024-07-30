@@ -18,6 +18,7 @@ const login = async(req, res, next) => {
         let id = null;
         if(req.session.passport && req.session.passport.user) id = req.session.passport.user;
         const user = await userService.searchUserById(id)
+        console.log(user);
         //genero el token y seteo los header con authorization
         const token = generateToken(user)
         if(!user) res.status(401).json({ msg: 'Error de autenticacion' });
@@ -53,7 +54,8 @@ const logout = async(req, res) => {
 
 const current = async(req,res) => {
     try {
-        const user = req.user
+        // const user = req.user
+        const user = await userService.sendUserInfo(req.user)
         res.json({user: user})
     } catch (error) {
         throw new Error(error)

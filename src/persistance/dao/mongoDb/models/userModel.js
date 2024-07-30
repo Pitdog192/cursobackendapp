@@ -8,8 +8,12 @@ const UserSchema = new Schema({
     age: {type: Number,},
     password: {type: String},
     role: {type: String, default: 'user'},
-    cart: {type: String},
-    githubUser: {type: Boolean}
+    githubUser: {type: Boolean},
+    cart: {
+        type: Schema.Types.ObjectId,
+        ref: "carts",
+        default: []
+    }
 })
 
 const userModel = mongoose.model('users', UserSchema)

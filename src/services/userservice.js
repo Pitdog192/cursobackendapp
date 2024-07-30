@@ -1,6 +1,8 @@
 import { createHash, isValidPassword } from "../utils.js"
 import persistence from '../persistance/dao/factory.js';
-const { userDao } = persistence;
+const { userDao, cartDao } = persistence;
+import UserRepository from "../persistance/repository/user.repository.js"
+const userRepository = new UserRepository()
 
 const searchUser = async(email) =>{
     try {
@@ -18,15 +20,26 @@ const searchUserById = async(id) =>{
     }
 }
 
+const sendUserInfo = async (user) => {
+    try {
+        const userInfo = await userRepository.sendUserInfo(user)
+        return userInfo
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
 const createUser = async(user) =>{
     try {
         const { email, password } = user;
         const existUser = await searchUser(email)
         if (!existUser) {
+            let userCart = await cartDao.create()
             if(!password){
                 const newUser = await userDao.create({
                     ...user,
-                    githubUser: true
+                    githubUser: true,
+                    cart: userCart._id
                 })
                 return newUser
             } else {
@@ -35,12 +48,14 @@ const createUser = async(user) =>{
                         ...user,
                         password: createHash(password),
                         role: "admin",
+                        cart: userCart._id
                     })
                     return newUser
                 } else {
                 const newUser = await userDao.create({
                     ...user,
                     password: createHash(password),
+                    cart: userCart._id
                 })
                 return newUser
             }
@@ -59,6 +74,7 @@ const loginUser = async (user) => {
         if(!userExist.password) return null
         const passValid = isValidPassword(password, userExist)
         if (!passValid) return null
+        //debería hacer un if(!userExist.cart) para crearle un carrito nuevo si se borró o al momento de añadir un producto
         return userExist
     } catch (error) {
         throw new Error(error)
@@ -70,7 +86,8 @@ const userService = {
     createUser,
     loginUser,
     searchUser,
-    searchUserById
+    searchUserById,
+    sendUserInfo
 }
 
 export default userService

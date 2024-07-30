@@ -13,7 +13,7 @@ export default class DaoMongoDB {
 
     async getById(id) {
         try {
-            return await this.model.findById(id)
+            return await this.model.findById(id).populate("cart")
         } catch (error) {
             throw new Error(error)
         }
