@@ -109,4 +109,13 @@ export default class DaoMongoDB {
             throw new Error(error)
         }
     }
+
+    async generateTicket(user){
+        try {
+            let cart = this.model.findById(user.cart._id)
+            console.log(`carrito : ${cart}`);
+        } catch (error) {
+            
+        }
+    }
 }

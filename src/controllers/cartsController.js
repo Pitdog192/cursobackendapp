@@ -12,7 +12,7 @@ const createCart = async (req, res, next) => {
     }
 }
 
-const getCartById = async(req,res, next) => {
+const getCartById = async(req, res, next) => {
     try {
         let {cid} = req.params
         let cartProducts = await cartService.getById(cid)
@@ -23,7 +23,7 @@ const getCartById = async(req,res, next) => {
     }
 }
 
-const insertProduct = async(req,res, next) => {
+const insertProduct = async(req, res, next) => {
     try {
         let {pid , cid} = req.params
         const findProdInCart = await cartService.existProdInCart(cid, pid)
@@ -62,7 +62,7 @@ const increaseProdQuantity = async(req, res, next) => {
     }
 }
 
-const delProduct = async(req,res, next) => {
+const delProduct = async(req, res, next) => {
     try {
         let {pid , cid} = req.params
         const deleteProduct = await cartService.deleteProduct(cid, pid)
@@ -73,12 +73,24 @@ const delProduct = async(req,res, next) => {
     }
 }
 
+const finishPurchase = async(req, res, next) => {
+    try {
+        let user = req.user
+        const ticket = await cartService.generateTicket(user)
+        console.log(ticket);
+        return ticket
+    } catch (error) {
+        next(error)
+    }
+}
+
 const cartController = {
     createCart,
     getCartById,
     insertProduct,
     increaseProdQuantity,
-    delProduct
+    delProduct,
+    finishPurchase
 }
 
 export default cartController 

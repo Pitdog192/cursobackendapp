@@ -60,7 +60,7 @@ const addProdToCart = async(cartId, prodId, quantity) => {
         await cart.save()
         return cart
     } catch (error) {
-        console.log(error);
+        throw new Error(error)
     }
 }
 
@@ -80,6 +80,14 @@ const deleteProduct = async(cid, pid) => {
     }
 }
 
+const generateTicket = async(user) => {
+    try {
+        return await cartDao.generateTicket(user);
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
 const cartService = {
     getById,
     create,
@@ -89,7 +97,8 @@ const cartService = {
     existProdInCart,
     addProdToCart,
     increaseProdQuantity,
-    deleteProduct
+    deleteProduct,
+    generateTicket
 }
 
 export default cartService

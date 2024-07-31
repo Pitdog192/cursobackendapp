@@ -9,6 +9,6 @@ cartRouter.get('/:cid', cartController.getCartById)
 cartRouter.post('/:cid/product/:pid', checkAuth, cartController.insertProduct)
 cartRouter.delete('/:cid/products/:pid', checkAuth, cartController.delProduct)
 cartRouter.put('/:cid/products/:pid', cartController.increaseProdQuantity)
-cartRouter.post('/:cid/purchase') 
+cartRouter.post('/:cid/purchase', checkAuth, cartController.finishPurchase)
 
 export default cartRouter
