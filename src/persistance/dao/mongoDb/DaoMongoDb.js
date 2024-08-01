@@ -13,6 +13,14 @@ export default class DaoMongoDB {
 
     async getById(id) {
         try {
+            return await this.model.findById(id)
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
+
+    async getCartById(id) {
+        try {
             return await this.model.findById(id).populate("cart")
         } catch (error) {
             throw new Error(error)
@@ -110,12 +118,15 @@ export default class DaoMongoDB {
         }
     }
 
-    async generateTicket(user){
+    async clearCart(cartId) {
         try {
-            let cart = this.model.findById(user.cart._id)
-            console.log(`carrito : ${cart}`);
+            return await this.model.findByIdAndUpdate(
+                cartId,
+                { $set: { products: [] } },
+                { new: true }
+            );
         } catch (error) {
-            
+            throw new Error(error);
         }
     }
 }

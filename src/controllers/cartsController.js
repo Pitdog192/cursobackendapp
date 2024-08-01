@@ -77,8 +77,7 @@ const finishPurchase = async(req, res, next) => {
     try {
         let user = req.user
         const ticket = await cartService.generateTicket(user)
-        console.log(ticket);
-        return ticket
+        res.send(ticket)
     } catch (error) {
         next(error)
     }

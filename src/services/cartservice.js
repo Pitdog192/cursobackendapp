@@ -1,5 +1,5 @@
 import persistence from '../persistance/dao/factory.js';
-const { cartDao } = persistence;
+const { cartDao, ticketDao, productDao } = persistence;
 
 const getById = async (id) => {
     try {
@@ -82,7 +82,29 @@ const deleteProduct = async(cid, pid) => {
 
 const generateTicket = async(user) => {
     try {
-        return await cartDao.generateTicket(user);
+        const cart = await cartDao.getById(user.cart._id)
+        if (!cart) return null;
+
+        let totalPrice = 0;
+        if (cart.products.length > 0) {
+            for (const prodInCart of cart.products) {
+                const idProd = prodInCart.pid;
+                const prodDB = await productDao.getById(idProd);
+                if (prodInCart.quantity <= prodDB.stock) {
+                    const amount = prodInCart.quantity * prodDB.price;
+                    totalPrice += amount;
+                } else return null;
+            }
+        }
+
+        const ticket = await ticketDao.create({
+            code: `${Math.ceil(Math.random() * 1000)}`,
+            purchase_datetime: new Date().toLocaleString(),
+            amount: totalPrice,
+            purchaser: user.email,
+        });
+        await cartDao.clearCart(user.cart._id)
+        return ticket;
     } catch (error) {
         throw new Error(error)
     }

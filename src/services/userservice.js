@@ -14,7 +14,7 @@ const searchUser = async(email) =>{
 
 const searchUserById = async(id) =>{
     try {
-        return await userDao.getById(id)
+        return await userDao.getCartById(id)
     } catch (error) {
         throw new Error(error)
     }
