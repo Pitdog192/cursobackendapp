@@ -16,6 +16,7 @@ import cors from 'cors';
 import './middlewares/passport/passportLocal.js'
 import './middlewares/passport/passportGithub.js'
 import { config } from './config/config.js'
+import flash from 'connect-flash'
 
 const PORT = config.PORT || 8080
 const app = express()
@@ -40,23 +41,22 @@ export const generateToken = (user, time = "5m") => {
 }
 
 app.engine('handlebars', handlebars.engine())
-app.set('views', __dirname+'/views')
-app.set('view engine', 'handlebars')
-app.use(express.json())
-app.use(urlencoded({extended: true}))
-app.use(express.static(__dirname + '/public'))
-app.use(errorHandler)
-app.use(cookieParser())
-app.use(session(storeConfig))
-app.use(cors({origin: config.FRONT_ORIGIN}))
-//PASSPORT
-app.use(passport.initialize())
-app.use(passport.session())
-
-app.use('/api/products', productRouter)
-app.use('/api/carts', cartRouter)
-app.use('/views', viewsRouter)
-app.use('/api/sessions', sessionRouter)
+.set('views', __dirname+'/views')
+.set('view engine', 'handlebars')
+.use(express.json())
+.use(urlencoded({extended: true}))
+.use(express.static(__dirname + '/public'))
+.use(errorHandler)
+.use(cookieParser())
+.use(session(storeConfig))
+.use(cors({origin: config.FRONT_ORIGIN}))
+.use(flash())
+.use(passport.initialize())
+.use(passport.session())
+.use('/api/products', productRouter)
+.use('/api/carts', cartRouter)
+.use('/views', viewsRouter)
+.use('/api/sessions', sessionRouter)
 
 app.get('*', (req, res) => {
     res.redirect('/views/login');

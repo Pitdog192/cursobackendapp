@@ -3,7 +3,6 @@ import {generateToken} from '../middlewares/jwt.js'
 
 const register = async (req, res, next)=>{
     try {
-        console.log("entro al register del controller");
         res.json({
             msg: 'Register OK',
             session: req.session

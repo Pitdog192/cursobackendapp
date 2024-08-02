@@ -2,11 +2,12 @@ import { Router } from "express"
 import userController from "../controllers/userController.js"
 import passport from "passport";
 import { checkAuth } from "../middlewares/jwt.js";
+import { validatorRegister } from "../middlewares/validator/user.validator.js";
 
 const sessionRouter = Router()
 
 //ESTRATEGIA LOCAL
-sessionRouter.post('/register', passport.authenticate('register', {
+sessionRouter.post('/register', [validatorRegister], passport.authenticate('register', {
     successRedirect: '/views/login',
     failureRedirect: '/register',
     failureFlash: true
