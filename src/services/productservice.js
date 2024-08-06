@@ -1,4 +1,5 @@
 import persistence from '../persistance/dao/factory.js';
+import { generateProduct } from '../utils.js';
 const { productDao } = persistence;
 
 const getById = async (id) => {
@@ -49,13 +50,27 @@ const findByIddelete = async (id) => {
     }
 }
 
+const productMock = async () => {
+    try {
+        let mock = []
+        for (let i = 0; i < 100; i++) {
+            let productMock = generateProduct()
+            mock.push(productMock)
+        }
+        return mock
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
 const productService = {
     getById,
     getAll,
     create,
     update,
     updateOne,
-    findByIddelete
+    findByIddelete,
+    productMock
 }
 
 export default productService

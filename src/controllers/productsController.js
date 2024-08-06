@@ -89,12 +89,23 @@ const deleteProduct = async (req, res, next) => {
     }
 }
 
+const productMock = async (req, res, next) => {
+    try {
+        let mockingproducts = await productService.productMock()
+        res.send(mockingproducts)
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+}
+
 const productController= {
     getProduct,
     getProducts,
     createProduct,
     modifyProduct,
-    deleteProduct
+    deleteProduct,
+    productMock
 }
 
 export default productController
