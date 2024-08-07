@@ -1,5 +1,5 @@
-import { createHash, isValidPassword } from "../utils.js"
-import persistence from '../persistance/dao/factory.js';
+import { createHash, isValidPassword } from "../utils/passwordHash.js"
+import persistence from '../persistance/dao/factory.js'
 const { userDao, cartDao } = persistence;
 import UserRepository from "../persistance/repository/user.repository.js"
 const userRepository = new UserRepository()

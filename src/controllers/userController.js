@@ -1,9 +1,10 @@
 import userService from "../services/userservice.js"
 import {generateToken} from '../middlewares/jwt.js'
+import { httpResponse } from "../utils/httpResponse.js"
 
 const register = async (req, res, next)=>{
     try {
-        res.json({
+        return httpResponse.Ok(res, {
             msg: 'Register OK',
             session: req.session
         })
@@ -54,7 +55,7 @@ const current = async(req,res) => {
     try {
         // const user = req.user
         const user = await userService.sendUserInfo(req.user)
-        res.json({user: user})
+        return httpResponse.Ok(res, {user:user})
     } catch (error) {
         throw new Error(error)
     }

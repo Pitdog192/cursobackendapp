@@ -1,12 +1,13 @@
 // import cartManager from "../dao/fileSystem/container/carts.js"
 import cartService from "../services/cartservice.js"
 import productService from "../services/productservice.js"
+import { httpResponse } from "../utils/httpResponse.js"
 
 const createCart = async (req, res, next) => {
     try {
         await cartService.create()
         // await cartManager.createCart()
-        res.send(`Carrito creado con éxito`)
+        return httpResponse.Ok(res, 'Carrito creado con éxito')
     } catch (error) {
         next(error)
     }
@@ -17,7 +18,7 @@ const getCartById = async(req, res, next) => {
         let {cid} = req.params
         let cartProducts = await cartService.getById(cid)
         // let cartProducts = await cartManager.listCart(req.params.cid)
-        res.send(cartProducts.products)
+        return httpResponse.Ok(res, cartProducts.products)
     } catch (error) {
         next(error)
     }
@@ -34,7 +35,7 @@ const insertProduct = async(req, res, next) => {
             const productAdded = await cartService.addProdToCart(cid, pid)
         }
         // const updatedCart = await cart.save()
-        res.send('Producto agregado con éxito')
+        return httpResponse.Ok(res, 'Producto agregado con éxito')
     } catch (error) {
         next(error)
     }
@@ -55,7 +56,7 @@ const increaseProdQuantity = async(req, res, next) => {
                 const error = new Error('Error actualizando cantidad, carrito o producto no encontrado')
                 throw error
             }
-            res.send('Cantidad actualizada con éxito')
+            return httpResponse.Ok(res, 'Cantidad actualizada con éxito')
         }
     } catch (error) {
         next(error)
@@ -66,8 +67,8 @@ const delProduct = async(req, res, next) => {
     try {
         let {pid , cid} = req.params
         const deleteProduct = await cartService.deleteProduct(cid, pid)
-        if (!deleteProduct) res.json({ msg: "Product | Cart not exist" })
-        res.send('Producto Eliminado con éxito')
+        if (!deleteProduct) return httpResponse.NotFound(res, 'Product | Cart not exist')
+        return httpResponse.Ok(res, 'Producto Eliminado con éxito')
     } catch (error) {
         next(error)
     }
@@ -77,7 +78,7 @@ const finishPurchase = async(req, res, next) => {
     try {
         let user = req.user
         const ticket = await cartService.generateTicket(user)
-        res.send(ticket)
+        return httpResponse.Ok(res, ticket)
     } catch (error) {
         next(error)
     }

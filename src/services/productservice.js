@@ -1,5 +1,5 @@
 import persistence from '../persistance/dao/factory.js';
-import { generateProduct } from '../utils.js';
+import generateProduct from '../utils/mock.js';
 const { productDao } = persistence;
 
 const getById = async (id) => {

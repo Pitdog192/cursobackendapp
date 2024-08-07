@@ -1,13 +1,13 @@
 import { v4 as uuidv4 } from 'uuid'
 import productService from '../services/productservice.js'
+import { httpResponse } from "../utils/httpResponse.js"
 
 const getProduct = async (req, res, next) => {
     let productId = req.params.pid
     try {
         let product = await productService.getById(productId)
-        if(!product) res.status(404).json({ msg: "Product not Found" })
-        // let product = await productManager.getProductById(productId)
-        res.send(product)
+        if(!product) return httpResponse.NotFound(res, 'Product not exist')
+            return httpResponse.NotFound(res, product)
     } catch (error) {
         next(error)
     }
@@ -59,8 +59,7 @@ const createProduct = async (req, res, next) => {
         description,
         stock
     })
-        // let newProduct = await productManager.addProduct(product)
-        res.send({message: "Producto creado con éxito"})
+        return httpResponse.Ok(res, 'Producto creado con éxito')
     } catch (error) {
         next(error)
     }
@@ -70,8 +69,7 @@ const modifyProduct = async (req, res, next) => {
     try {
         let productId = req.params.pid
         let updatedProduct = await productService.update(productId, req.body)
-        // let updatedProduct = await productManager.updateProduct(req.params.pid, req.body)
-        updatedProduct ? res.send(updatedProduct) : res.status(404).send({ error: "Producto no encontrado" })
+        updatedProduct ? httpResponse.Ok(res, updatedProduct) : httpResponse.NotFound(res, 'Producto no encontrado')
     } catch (error) {
         next(error)
     }
@@ -81,8 +79,7 @@ const deleteProduct = async (req, res, next) => {
     try {
         let productId = req.params.pid
         await productService.findByIddelete(productId)
-        // await productManager.deleteProduct(req.params.pid)
-        res.send({message: "Producto eliminado con éxito"})
+        return httpResponse.Ok(res, 'Producto eliminado con éxito')
     } catch (error) {
         console.log(error)
         next(error)
@@ -92,7 +89,7 @@ const deleteProduct = async (req, res, next) => {
 const productMock = async (req, res, next) => {
     try {
         let mockingproducts = await productService.productMock()
-        res.send(mockingproducts)
+        return httpResponse.Ok(res, mockingproducts)
     } catch (error) {
         console.log(error)
         next(error)

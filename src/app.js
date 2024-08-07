@@ -4,7 +4,7 @@ import productRouter from './routes/products.route.js'
 import viewsRouter from './routes/views.router.js'
 import sessionRouter from './routes/sessionRouter.js'
 import handlebars from 'express-handlebars'
-import {__dirname} from './utils.js'
+import {__dirname} from './utils/utils.js'
 import { Server } from 'socket.io'
 import productManager from './persistance/dao/fileSystem/container/productos.js'
 import { errorHandler } from './middlewares/errorHandler.js';
@@ -41,11 +41,11 @@ export const generateToken = (user, time = "5m") => {
 }
 
 app.engine('handlebars', handlebars.engine())
-.set('views', __dirname+'/views')
+.set('views', __dirname+'/../views')
 .set('view engine', 'handlebars')
 .use(express.json())
 .use(urlencoded({extended: true}))
-.use(express.static(__dirname + '/public'))
+.use(express.static(__dirname + '/../public'))
 .use(errorHandler)
 .use(cookieParser())
 .use(session(storeConfig))
