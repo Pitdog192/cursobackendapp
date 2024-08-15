@@ -17,10 +17,12 @@ import './middlewares/passport/passportLocal.js'
 import './middlewares/passport/passportGithub.js'
 import { config } from './config/config.js'
 import flash from 'connect-flash'
+import compression from 'express-compression';
+import { logger } from './utils/logger.js'
 
 const PORT = config.PORT || 8080
 const app = express()
-const httpServer = app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`))
+const httpServer = app.listen(PORT, () => logger.info(`Server listening on port: ${PORT}`))
 const socketServer = new Server(httpServer)
 
 const storeConfig = {
@@ -59,12 +61,20 @@ app.engine('handlebars', handlebars.engine())
 .use('/views', viewsRouter)
 .use('/api/sessions', sessionRouter)
 
+app.get('/loggerTest', (req, res) =>{
+    logger.debug('Simulandolog debug') // en prod no deberia salir
+    logger.http('Simulandolog http') // en prod no deberia salir
+    logger.info('Simulandolog info')
+    logger.warn('Simulandolog warn')
+    logger.error('Simulando log error en prod')
+})
+
 app.get('*', (req, res) => {
     res.redirect('/views/login');
 })
 
 socketServer.on('connection', async (socket) => {
-    console.log(`Cliente conectado`)
+    logger.info(`Cliente conectado`)
 
     const products = await productManager.getProducts()
     socket.emit('productos', products)

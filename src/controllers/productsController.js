@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 import productService from '../services/productservice.js'
 import { httpResponse } from "../utils/httpResponse.js"
+import { logger } from '../utils/logger.js'
 
 const getProduct = async (req, res, next) => {
     let productId = req.params.pid
@@ -43,13 +44,14 @@ const getProducts = async (req, res) => {
             nextLink: next
         }
     } catch (error){
-        console.log(error);
+        logger.error(error);
     }
 }
 
 const createProduct = async (req, res, next) => {
     try {
         const { title, category, price, code, description, stock } = req.body;
+        httpResponse.ServerError(res, req.body)
         await productService.create({
         pid: uuidv4(),
         title,
