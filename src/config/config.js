@@ -9,5 +9,8 @@ export const config = {
     CALLBACK_URL: process.env.CALLBACK_URL,
     JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN,
     FRONT_ORIGIN: process.FRONT_ORIGIN,
-    ENVIROMENT: process.argv[3]
+    ENVIROMENT: process.argv[3],
+    EMAIL: process.env.EMAIL,
+    EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
+    EMAIL_PORT: process.env.EMAIL_PORT
 }

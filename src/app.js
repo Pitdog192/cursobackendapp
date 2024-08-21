@@ -3,6 +3,7 @@ import cartRouter from './routes/carts.router.js'
 import productRouter from './routes/products.route.js'
 import viewsRouter from './routes/views.router.js'
 import sessionRouter from './routes/sessionRouter.js'
+import emailRouter from './routes/email.router.js'
 import handlebars from 'express-handlebars'
 import {__dirname} from './utils/utils.js'
 import { Server } from 'socket.io'
@@ -17,7 +18,7 @@ import './middlewares/passport/passportLocal.js'
 import './middlewares/passport/passportGithub.js'
 import { config } from './config/config.js'
 import flash from 'connect-flash'
-import compression from 'express-compression';
+import compression from 'compression';
 import { logger } from './utils/logger.js'
 
 const PORT = config.PORT || 8080
@@ -60,6 +61,7 @@ app.engine('handlebars', handlebars.engine())
 .use('/api/carts', cartRouter)
 .use('/views', viewsRouter)
 .use('/api/sessions', sessionRouter)
+.use('/email', emailRouter)
 
 app.get('/loggerTest', (req, res) =>{
     logger.debug('Simulandolog debug') // en prod no deberia salir
