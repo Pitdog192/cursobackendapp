@@ -21,5 +21,7 @@ sessionRouter.get('/githubprofile', passport.authenticate( 'github'), userContro
 sessionRouter.post('/logout', userController.logout)
 
 sessionRouter.get('/current', checkAuth, userController.current)
+sessionRouter.get('/setrecoverycookie', userController.handlePasswordResetLink)
+sessionRouter.post('/recovery_pass', checkAuth ,userController.updatePass)
 
 export default sessionRouter

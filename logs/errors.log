@@ -11,3 +11,18 @@
 22-08-2024 10:19 - error: No recipients defined
 22-08-2024 11:10 - error: ENOENT: no such file or directory, open 'C:\Users\arroquigarays\Documents\cursobackendapp\src\views\emails\undefined.handlebars'
 22-08-2024 11:13 - error: res is not defined
+23-08-2024 10:28 - error: TypeError: Cannot read properties of undefined (reading '_id')
+23-08-2024 10:49 - error: res.status is not a function
+23-08-2024 10:50 - error: res.status is not a function
+23-08-2024 12:05 - error: UserModel is not defined
+23-08-2024 12:07 - error: userService.getOne is not a function
+23-08-2024 12:08 - error: userService.getOne is not a function
+23-08-2024 12:08 - error: Error
+23-08-2024 12:08 - error: Error
+23-08-2024 12:09 - error: Error
+23-08-2024 12:17 - error: Error
+23-08-2024 12:27 - error: Error
+23-08-2024 12:28 - error: Error
+23-08-2024 12:29 - error: Error
+23-08-2024 12:29 - error: Error
+23-08-2024 12:30 - error: Error

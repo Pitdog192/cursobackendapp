@@ -1,10 +1,11 @@
 import { createHash, isValidPassword } from "../utils/passwordHash.js"
+import { generateToken } from "../middlewares/jwt.js"
 import persistence from '../persistance/dao/factory.js'
 const { userDao, cartDao } = persistence;
 import UserRepository from "../persistance/repository/user.repository.js"
 const userRepository = new UserRepository()
 
-const searchUser = async(email) =>{
+const searchUser = async (email) => {
     try {
         return await userDao.getOne({ email })
     } catch (error) {
@@ -12,7 +13,7 @@ const searchUser = async(email) =>{
     }
 }
 
-const searchUserById = async(id) =>{
+const searchUserById = async (id) => {
     try {
         return await userDao.getCartById(id)
     } catch (error) {
@@ -29,13 +30,13 @@ const sendUserInfo = async (user) => {
     }
 }
 
-const createUser = async(user) =>{
+const createUser = async (user) => {
     try {
         const { email, password } = user;
         const existUser = await searchUser(email)
         if (!existUser) {
             let userCart = await cartDao.create()
-            if(!password){
+            if (!password) {
                 const newUser = await userDao.create({
                     ...user,
                     githubUser: true,
@@ -52,13 +53,13 @@ const createUser = async(user) =>{
                     })
                     return newUser
                 } else {
-                const newUser = await userDao.create({
-                    ...user,
-                    password: createHash(password),
-                    cart: userCart._id
-                })
-                return newUser
-            }
+                    const newUser = await userDao.create({
+                        ...user,
+                        password: createHash(password),
+                        cart: userCart._id
+                    })
+                    return newUser
+                }
             }
         } else return null
     } catch (error) {
@@ -71,7 +72,7 @@ const loginUser = async (user) => {
         const { email, password } = user
         const userExist = await searchUser(email)
         if (!userExist) return null
-        if(!userExist.password) return null
+        if (!userExist.password) return null
         const passValid = isValidPassword(password, userExist)
         if (!passValid) return null
         //debería hacer un if(!userExist.cart) para crearle un carrito nuevo si se borró o al momento de añadir un producto
@@ -81,13 +82,37 @@ const loginUser = async (user) => {
     }
 }
 
+const generateResetPass = async (user) => {
+    try {
+        const token = generateToken(user, '1h');
+        const expiresIn = 60 * 60 * 1000;
+        const setUserToken = await userDao.setUserToken(user._id, token, expiresIn)
+        return {setUserToken, token}
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
+const updatePass = async (user, pass) => {
+    try {
+        const isEqual = isValidPassword(pass, user)
+        if (isEqual) return null
+        const newPass = createHash(pass)
+        const updatedpassword = await userDao.updatePass(user._id, { password: newPass })
+        return updatedpassword
+    } catch (error) {
+        throw new Error(error)
+    }
+}
 
 const userService = {
     createUser,
     loginUser,
     searchUser,
     searchUserById,
-    sendUserInfo
+    sendUserInfo,
+    generateResetPass,
+    updatePass
 }
 
 export default userService

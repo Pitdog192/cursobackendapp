@@ -126,6 +126,35 @@ export default class DaoMongoDB {
                 { new: true }
             );
         } catch (error) {
+            throw new Error(error)
+        }
+    }
+
+    async updatePass(userId, pass){
+        try {
+            return await this.model.findByIdAndUpdate(
+                userId,
+                { $set: pass },
+                { new: true }
+            );
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
+
+    async setUserToken(userId, token, expiresIn) {
+        try {
+            const updateFields = {
+                resetPasswordToken: token,
+                resetPasswordExpires: Date.now() + expiresIn
+            };
+            
+            return await this.model.findByIdAndUpdate(
+                userId,
+                { $set: updateFields },
+                { new: true }
+            );
+        } catch (error) {
             throw new Error(error);
         }
     }
