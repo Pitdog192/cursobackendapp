@@ -8,3 +8,6 @@
 21-08-2024 10:21 - error: Missing credentials for "PLAIN"
 21-08-2024 10:22 - error: Missing credentials for "PLAIN"
 21-08-2024 10:23 - error: Missing credentials for "PLAIN"
+22-08-2024 10:19 - error: No recipients defined
+22-08-2024 11:10 - error: ENOENT: no such file or directory, open 'C:\Users\arroquigarays\Documents\cursobackendapp\src\views\emails\undefined.handlebars'
+22-08-2024 11:13 - error: res is not defined

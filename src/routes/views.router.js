@@ -26,4 +26,12 @@ viewsRouter.get('/profile', validateAuth, validateRole , async (req, res) => {
     res.render('home', { user: user, products : envio, role: role, nextPage: products.nextLink, prevPage: products.prevLink })
 })
 
+viewsRouter.get('/recovery_password', (req, res) =>{
+    res.render('./users/recoverypassword')
+})
+
+viewsRouter.get('/sendrecoverymail', (req, res) =>{
+    res.render('./users/sendmailtorecovery')
+})
+
 export default viewsRouter
