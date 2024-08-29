@@ -1,15 +1,17 @@
-import { productDao } from '../dao/factory.js'
+import factory from '../dao/factory.js'
 import ProductDTO from '../dto/product.req.dto.js'
-
+const {productDao} = factory
 export default class ProductRepository {
     constructor(){
         this.dao = productDao;
     }
 
-    async createProd(prod){
+    async getById(id){
         try {
-            const prodDTO = new ProductDTO(prod);
-            return await this.dao.create(prodDTO);
+            const prod = await this.dao.getById(id);
+            if(prod){
+                return new ProductDTO(prod);
+            } else return null
         } catch (error) {
             throw new Error(error)
         }

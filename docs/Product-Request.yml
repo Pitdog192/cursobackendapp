@@ -1,0 +1,32 @@
+components:
+  parameters:
+    schemas:
+      Product:
+        type: object
+        required:
+          - title
+          - description
+          - code
+          - price
+          - category
+        properties:
+          title:
+            type: string
+            description: Titulo del producto
+            example: Sillón Gamer
+          description:
+            type: string
+            description: Descripción del producto.
+            example: Ergonómica y confortable
+          code:
+            type: string
+            description: Código identificatorio del producto.
+            example: CB-09
+          price:
+            type: number
+            description: Precio del producto.
+            example: 149.05
+          category:
+            type: string
+            description: Categoría a la que pertenece el producto.
+            example: Sillones

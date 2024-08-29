@@ -1,10 +1,12 @@
 import persistence from '../persistance/dao/factory.js';
 import generateProduct from '../utils/mock.js';
 const { productDao } = persistence;
+import ProductRepository from '../persistance/repository/product.repositoy.js';
+const productRepo = new ProductRepository()
 
 const getById = async (id) => {
     try {
-        return await productDao.getById(id)
+        return productRepo.getById(id)
     } catch (error) {
         throw new Error(error)
     }

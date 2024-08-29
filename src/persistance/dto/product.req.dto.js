@@ -1,8 +1,11 @@
 export default class ProductDTO {
     constructor(prod) {
-        this.name = prod.nombre;
-        this.description = prod.descripcion;
-        this.price = prod.precio;
-        this.stock = prod.disponibilidad;
+        this.id = prod._id;
+        this.nombre = prod.title;
+        this.descripcion = prod.description;
+        this.precio = prod.price;
+        this.codigo = prod.code;
+        this.stock = prod.stock;
+        this.categoria = prod.category;
     }
 }

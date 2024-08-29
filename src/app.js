@@ -20,12 +20,15 @@ import { config } from './config/config.js'
 import flash from 'connect-flash'
 import compression from 'compression';
 import { logger } from './utils/logger.js'
+import helmet from 'helmet'
+import swaggerUI from 'swagger-ui-express'
+import swaggerJSDoc from 'swagger-jsdoc'
+import { info } from '../docs/info.js'
 
 const PORT = config.PORT || 8080
 const app = express()
 const httpServer = app.listen(PORT, () => logger.info(`Server listening on port: ${PORT}`))
 const socketServer = new Server(httpServer)
-
 const storeConfig = {
     store: MongoStore.create({
         mongoUrl: config.MONGO_URI,
@@ -38,14 +41,10 @@ const storeConfig = {
     cookie: { maxAge: 180000 }
 }
 
-export const generateToken = (user, time = "5m") => {
-    const payload = {userId: user._id}
-    return jwt.sign(payload, ENV_KEYS.SECRET, { expiresIn: time,})
-}
-
 app.engine('handlebars', handlebars.engine())
 .set('views', __dirname+'/../views')
 .set('view engine', 'handlebars')
+.use(helmet())
 .use(express.json())
 .use(urlencoded({extended: true}))
 .use(express.static(__dirname + '/../public'))
@@ -57,11 +56,13 @@ app.engine('handlebars', handlebars.engine())
 .use(flash())
 .use(passport.initialize())
 .use(passport.session())
+.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerJSDoc(info)))
 .use('/api/products', productRouter)
 .use('/api/carts', cartRouter)
 .use('/views', viewsRouter)
 .use('/api/sessions', sessionRouter)
 .use('/email', emailRouter)
+.disable('x-powered-by');
 
 app.get('/loggerTest', (req, res) =>{
     logger.debug('Simulandolog debug') // en prod no deberia salir

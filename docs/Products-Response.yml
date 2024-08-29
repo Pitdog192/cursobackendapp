@@ -1,0 +1,102 @@
+components:
+  schema:
+    Products:
+      Product:
+        type: object
+        properties:
+          id:
+            type: string
+            description: identificador único de producto.
+          nombre:
+            type: string
+            description: Nombre del producto.
+          descripcion:
+            type: string
+            description: Breve descripción del producto.
+          precio:
+            type: number
+            description: Precio del producto.
+          codigo:
+            type: string
+            description: Codigo único del producto.
+          stock:
+            type: number
+            description: Cantidad disponible del producto.
+          categoria:
+            type: string
+            description: Conjunto de productos al cual pertenece el producto.
+        example:
+          id: 66bdfbb0123e56f00f0f1283
+          nombre: Sillon gamer
+          descripcion: Sillon gamer ergonomico y economico, con el mejor precio calidad del mercado
+          precio: 452.452
+          codigo: SG-01
+          stock: 2
+          categoria: Mobiliario
+      GetAllProducts:
+        type: array
+        items:
+          type: object
+          properties:    
+            _id:
+              type: string
+              description: identificador único de producto.
+            pid:
+              type: string
+              description: identificador producto
+            title:
+              type: string
+              description: Nombre del producto.
+            description:
+              type: string
+              description: Breve descripción del producto.
+            code:
+              type: string
+              description: Codigo único del producto.
+            price:
+              type: number
+              description: Precio del producto.
+            status:
+              type: string
+              description: Si el producto está disponible o no.
+            stock:
+              type: number
+              description: Cantidad disponible del producto.
+            category:
+              type: string
+              description: Conjunto de productos al cual pertenece el producto.
+            __v:
+              type: number
+              description: No tengo ni idea despues lo tengo que sacar con DTO.
+      ErrorGetById:
+        type: object
+        properties:
+          status:
+            type: number
+            description: Código del error.
+          message:
+            type: string
+            description: No se encontró el id en la base de datos.
+          data:
+            type: string
+            description: Informacion del error
+        example:
+          status: 404
+          message: No se encontró el id 66bdfbb0123e56f00f0f1283 en la base de datos
+          data: Product not found
+      InternalServerError:
+        type: object
+        properties:
+          status: 
+            type: number
+            description: Código del error.
+          message:
+            type: string
+            description: Error del servidor 
+          data:
+            type: string
+            descripcion: Informacion del error.
+        example:
+          status: 500
+          message: Internal Server Error
+          data: Error del servidor

@@ -8,7 +8,7 @@ const getProduct = async (req, res, next) => {
     try {
         let product = await productService.getById(productId)
         if(!product) return httpResponse.NotFound(res, 'Product not exist')
-            return httpResponse.NotFound(res, product)
+        return httpResponse.Ok(res, product)
     } catch (error) {
         next(error)
     }
@@ -29,6 +29,8 @@ const getProducts = async (req, res) => {
             }
         }
         let allProducts = await productService.getAll(filter, limit, page, sortOrder)
+        console.log(queryObj);
+        
         const prev = allProducts.hasPrevPage ? `http://localhost:8080/views/profile?page=${allProducts.prevpage}` : null
         const next = allProducts.hasNextPage ? `http://localhost:8080/views/profile?page=${allProducts.nextPage}` : null
         return{
@@ -48,19 +50,29 @@ const getProducts = async (req, res) => {
     }
 }
 
+const getProductsApiMode = async(req, res) => {
+    try {
+        const products = await getProducts(req);
+        console.log(products.payload);
+        
+        res.send(products.payload)
+    } catch (error) {
+        logger.error(error);
+    }
+}
+
 const createProduct = async (req, res, next) => {
     try {
         const { title, category, price, code, description, stock } = req.body;
-        httpResponse.ServerError(res, req.body)
         await productService.create({
-        pid: uuidv4(),
-        title,
-        category,
-        price,
-        code,
-        description,
-        stock
-    })
+            pid: uuidv4(),
+            title,
+            category,
+            price,
+            code,
+            description,
+            stock
+        })
         return httpResponse.Ok(res, 'Producto creado con éxito')
     } catch (error) {
         next(error)
@@ -104,7 +116,8 @@ const productController= {
     createProduct,
     modifyProduct,
     deleteProduct,
-    productMock
+    productMock,
+    getProductsApiMode
 }
 
 export default productController
