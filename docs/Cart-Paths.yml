@@ -1,0 +1,145 @@
+paths:
+  /api/carts:
+    post:
+      tags:
+        - Create Cart
+      summary: Crea un carrito nuevo
+      responses:
+        200:
+          description: Se registró el producto correctamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schema/Carts/Cart'
+        500: 
+          description: Error del servidor.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schema/Products/InternalServerError'
+  /api/carts/{cid}:
+    get:
+      tags:
+        - Get Cart by ID
+      summary: Busca los productos de un carrito por ID
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          description: id referente al carrito
+          schema:
+            type: string
+            default: 66a92a461ef56c312a2ccde0
+      responses:
+        200:
+          description: Carrito encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schema/Carts/Cart'
+  /api/carts/{cid}/product/{pid}:
+    post:
+      tags:
+        - Insert product in Cart
+      summary: Insertar un producto en el carrito
+      parameters:
+      - in: path
+        name: cid
+        required: true
+        description: ID referente al carrito en cual insertar el producto
+        schema:
+          type: string
+          default: 66a92a461ef56c312a2ccde0
+      - in : path
+        name: pid
+        required: true
+        description: ID referente al producto
+        schema:
+          type: string
+          default: 665738cb7c77ef767d8954a9
+      responses:
+        200:
+          description: Producto insertado con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schema/Carts/Cart'
+    delete:
+      tags:
+        - Delete product in Cart
+      summary: Eliminar producto de un carrito
+      parameters: 
+        - in: path
+          name: cid
+          required: true
+          description: ID referente al carrito en cual borrar el producto
+          schema:
+            type: string
+            default: 66a92a461ef56c312a2ccde0
+        - in: path
+          name: pid
+          required: true
+          description: ID referente al producto para borrar
+          schema:
+            type: string
+            default: 665738cb7c77ef767d8954a9
+      responses:
+        200:
+          description: Producto eliminado con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schema/Carts/Cart'
+    put:
+      tags:
+        - Increase number of Products in Cart
+      summary: Incrementar o decrementar la cantidad de un producto en el carrito
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/parameters/schemas/ProductQuantityRequest'
+        required: true
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          description: ID referente al carrito en cual modificar un producto
+          schema:
+            type: string
+            default: 66a92a461ef56c312a2ccde0
+        - in: path
+          name: pid
+          required: true
+          description: ID referente al producto el cual modificar
+          schema:
+            type: string
+            default: 665738cb7c77ef767d8954a9
+      responses:
+        200:
+          description: Producto modificado con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schema/Carts/Cart'
+  /api/carts/{cid}/purchase:
+    post:
+      tags:
+        - Finish purchase
+      summary: Finalizar la compra del carrito (Necesito averiguar como usar esto con el req.user)
+      parameters:
+      - in: path
+        name: cid
+        required: true
+        description: ID referente al carrito para finalizar la compra
+        schema:
+          type: string
+          default: 66a92a461ef56c312a2ccde0
+      responses:
+        200:
+          description: Producto insertado con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schema/Carts/Ticket'
+

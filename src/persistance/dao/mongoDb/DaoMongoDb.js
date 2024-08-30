@@ -106,18 +106,6 @@ export default class DaoMongoDB {
         }
     }
 
-    async removeProdToCart(cid, pid) {
-        try {
-            return await this.model.findOneAndUpdate(
-                { _id: cid },
-                { $pull: { products: { product: pid } } },
-                { new: true }
-            )
-        } catch (error) {
-            throw new Error(error)
-        }
-    }
-
     async clearCart(cartId) {
         try {
             return await this.model.findByIdAndUpdate(

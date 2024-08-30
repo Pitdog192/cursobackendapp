@@ -1,0 +1,12 @@
+components:
+  parameters:
+    schemas:
+      ProductQuantityRequest:
+        type: object
+        required:
+          - quantity
+        properties:
+          quantity:
+            type: number
+            description: Cantidad del producto en el carrito
+            default: 10

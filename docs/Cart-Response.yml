@@ -1,0 +1,54 @@
+components:
+  schema:
+    Carts:
+      Cart:
+        type: object
+        properties:
+          cid:
+            type: string
+            description: Identificador único del carrito
+          products:
+            type: array
+            description: Array que contiene los productos
+            items:
+              type: object
+              properties:
+                _id: 
+                  type: string
+                  description: ID del producto
+                quantity:
+                  type: number
+                  description: Cantidad del producto en el carrito
+                pid:
+                  type: string
+                  description: ID de referencia al modelo de productos
+        example:
+          cid: 66a92a461ef56c312a2ccde0
+          products:
+            - _id: "665738cb7c77ef767d8954a9"
+              quantity: 2
+              pid: "prod123"
+            - _id: "665738cb7c77ef767d8954b8"
+              quantity: 1
+              pid: "prod456"
+      Ticket:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Código único del ticket.
+          example: "843"
+        purchase_datetime:
+          type: string
+          format: date-time
+          description: Fecha y hora de la compra.
+          example: "2024-08-28T15:30:00"
+        amount:
+          type: number
+          format: float
+          description: Importe total de la compra.
+          example: 249.99
+        purchaser:
+          type: string
+          description: Correo electrónico del comprador.
+          example: "user@example.com"

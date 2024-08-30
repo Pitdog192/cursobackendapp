@@ -2,7 +2,7 @@ paths:
   /api/products/{pid}:
     get:
       tags:
-      - Producto por ID
+      - Get Product by ID
       summary: Busca producto por id.
       parameters:
         - in: path
@@ -21,7 +21,7 @@ paths:
                 $ref: '#/components/schema/Products/Product'
     put:
       tags:
-      - Modificar producto
+      - Modify Product
       summary: Modifica un producto.
       parameters:
         - in: path
@@ -46,7 +46,7 @@ paths:
                 $ref: '#/components/schema/Products/Product'
     delete:
       tags:
-      - Eliminar producto
+      - Delete Product
       summary: Elimina un producto.
       parameters:
         - in: path

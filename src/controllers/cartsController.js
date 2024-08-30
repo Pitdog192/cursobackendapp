@@ -5,9 +5,9 @@ import { httpResponse } from "../utils/httpResponse.js"
 
 const createCart = async (req, res, next) => {
     try {
-        await cartService.create()
+        const cart = await cartService.create()
         // await cartManager.createCart()
-        return httpResponse.Ok(res, 'Carrito creado con éxito')
+        return httpResponse.Ok(res, `Carrito creado con éxito con ID: ${cart._id}`)
     } catch (error) {
         next(error)
     }
@@ -33,9 +33,8 @@ const insertProduct = async(req, res, next) => {
             throw error
         } else{
             const productAdded = await cartService.addProdToCart(cid, pid)
+            return httpResponse.Ok(res, `Producto agregado con éxito, ID: ${pid}`)
         }
-        // const updatedCart = await cart.save()
-        return httpResponse.Ok(res, 'Producto agregado con éxito')
     } catch (error) {
         next(error)
     }
@@ -67,8 +66,11 @@ const delProduct = async(req, res, next) => {
     try {
         let {pid , cid} = req.params
         const deleteProduct = await cartService.deleteProduct(cid, pid)
-        if (!deleteProduct) return httpResponse.NotFound(res, 'Product | Cart not exist')
-        return httpResponse.Ok(res, 'Producto Eliminado con éxito')
+        if (!deleteProduct) {
+            return httpResponse.NotFound(res, 'Product | Cart not exist')
+        } else {
+            return httpResponse.Ok(res, 'Producto Eliminado con éxito')
+        }
     } catch (error) {
         next(error)
     }
@@ -77,6 +79,8 @@ const delProduct = async(req, res, next) => {
 const finishPurchase = async(req, res, next) => {
     try {
         let user = req.user
+        console.log(user);
+        
         const ticket = await cartService.generateTicket(user)
         return httpResponse.Ok(res, ticket)
     } catch (error) {
