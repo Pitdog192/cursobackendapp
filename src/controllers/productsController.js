@@ -29,8 +29,6 @@ const getProducts = async (req, res) => {
             }
         }
         let allProducts = await productService.getAll(filter, limit, page, sortOrder)
-        console.log(queryObj);
-        
         const prev = allProducts.hasPrevPage ? `http://localhost:8080/views/profile?page=${allProducts.prevpage}` : null
         const next = allProducts.hasNextPage ? `http://localhost:8080/views/profile?page=${allProducts.nextPage}` : null
         return{
@@ -53,8 +51,6 @@ const getProducts = async (req, res) => {
 const getProductsApiMode = async(req, res) => {
     try {
         const products = await getProducts(req);
-        console.log(products.payload);
-        
         res.send(products.payload)
     } catch (error) {
         logger.error(error);
@@ -64,7 +60,7 @@ const getProductsApiMode = async(req, res) => {
 const createProduct = async (req, res, next) => {
     try {
         const { title, category, price, code, description, stock } = req.body;
-        await productService.create({
+        const createdProduct = await productService.create({
             pid: uuidv4(),
             title,
             category,
@@ -73,7 +69,7 @@ const createProduct = async (req, res, next) => {
             description,
             stock
         })
-        return httpResponse.Ok(res, 'Producto creado con éxito')
+        return httpResponse.Ok(res, createdProduct)
     } catch (error) {
         next(error)
     }

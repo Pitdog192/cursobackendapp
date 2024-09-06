@@ -11,9 +11,8 @@ describe('Test api ecommerce', ()=>{
         logger.info("se limpio la base de datos");
     });
 
-    test('[GET] /products', async()=>{
-        const response = await fetch(apiURL);
-        // console.log(response);
+    test('[GET] /products', async ()=>{
+        const response = await fetch(`${apiURL}/getProdsApi`);
         const responseJson = await response.json();
         assert.strictEqual(Array.isArray(responseJson), true);
         assert.equal(responseJson.length, 0);
@@ -21,15 +20,17 @@ describe('Test api ecommerce', ()=>{
 
     test('[POST] /products', async()=>{
         const body = generateProduct();
+        console.log(body);
+        
         const response = await fetch(apiURL, {
             method: 'POST',
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body)
         });
         const responseJson = await response.json();
-
-        assert.ok(responseJson, '_id');
-        assert.equal(body.title, responseJson.title);
+    
+        assert.ok(responseJson.data._id, '_id');
+        assert.equal(body.title, responseJson.data.title);
         assert.equal(response.status, 200)
     })
 })
