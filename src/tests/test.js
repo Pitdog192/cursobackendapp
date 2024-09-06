@@ -1,11 +1,13 @@
 import { describe, test, before } from "node:test";
 import assert from "node:assert";
 import { logger } from "../utils/logger.js";
-import generateProduct from "../utils/mock.js";
+import {generateProduct, generateUser} from "../utils/mock.js";
 
 const apiProductsURL = "http://localhost:8080/api/products";
 const apiCartsURL = "http://localhost:8080/api/carts";
+const apiSessionsURL = "http://localhost:8080/api/sessions";
 let cartID
+let userfake
 
 describe('Test api ecommerce', ()=>{
     before(async () => {
@@ -48,6 +50,30 @@ describe('Test api ecommerce', ()=>{
         const response = await fetch(`${apiCartsURL}/${cartID}`);
         const responseJson = await response.json();
         assert.strictEqual(Array.isArray(responseJson.data), true);
+        assert.equal(response.status, 200)
+        assert.equal(responseJson.message, 'Success');
+    })
+
+    test('[POST] /sessions', async()=>{
+        const user = generateUser()
+        userfake = {
+            email: user.email,
+            password: user.password
+        }
+        const response = await fetch(`${apiSessionsURL}/register`, {
+            method: 'POST',
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(user)
+        });
+        assert.equal(response.status, 200)
+    })
+
+    test('[POST] /sessions', async()=>{
+        const response = await fetch(`${apiSessionsURL}/login`, {
+            method: 'POST',
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(userfake)
+        });
         assert.equal(response.status, 200)
     })
 })

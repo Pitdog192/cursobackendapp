@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-const generateProduct = () => {
+export const generateProduct = () => {
     return {
         title: faker.commerce.product(),
         description: faker.commerce.productDescription(),
@@ -13,4 +13,12 @@ const generateProduct = () => {
     }
 }
 
-export default generateProduct
+export const generateUser = () => {
+    return {
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password()
+    }
+}
+
