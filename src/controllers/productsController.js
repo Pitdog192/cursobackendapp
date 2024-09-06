@@ -110,6 +110,16 @@ const productMock = async (req, res, next) => {
     }
 }
 
+const deleteAllProducts = async (req, res, next) => {
+    try {
+        await productService.deleteAllProducts()
+        return httpResponse.Ok(res, 'Todos los productos eliminados con exito')
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+}
+
 const productController= {
     getProduct,
     getProducts,
@@ -117,7 +127,8 @@ const productController= {
     modifyProduct,
     deleteProduct,
     productMock,
-    getProductsApiMode
+    getProductsApiMode,
+    deleteAllProducts
 }
 
 export default productController

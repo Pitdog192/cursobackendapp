@@ -14,6 +14,7 @@ productRouter.get('/:pid', productController.getProduct)
 productRouter.post('/', productController.createProduct)
 productRouter.put('/:pid', productController.modifyProduct)
 productRouter.delete('/:pid', productController.deleteProduct)
+productRouter.delete('/', productController.deleteAllProducts)
 
 
 export default productRouter

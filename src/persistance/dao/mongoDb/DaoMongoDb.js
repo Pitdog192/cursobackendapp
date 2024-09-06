@@ -146,4 +146,13 @@ export default class DaoMongoDB {
             throw new Error(error);
         }
     }
+
+    async deleteAllProducts(){
+        try {
+            const response = await this.model.deleteMany({});
+            return response;
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
 }

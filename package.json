@@ -4,7 +4,9 @@
     "start": "nodemon --env-file=.env ./src/app.js mongodb",
     "dev": "nodemon --env-file=.env ./src/app.js mongodb development",
     "prod": "nodemon --env-file=.env ./src/app.js mongodb productive",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test:linux": "export NODE_OPTIONS=--experimental-vm-modules && npx jest ./src/test/app",
+    "test:win": "set NODE_OPTIONS=--experimental-vm-modules&& npx jest .src/test/app.test.js",
+    "test:api": "node --env-file=.env ./src/tests/test.js mongodb development"
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
@@ -34,10 +36,15 @@
     "passport-github2": "^0.1.12",
     "passport-local": "^1.0.0",
     "socket.io": "^4.7.5",
+    "supertest": "^7.0.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "uuid": "^9.0.1",
     "winston": "^3.14.1",
     "winston-mongodb": "^5.1.1"
+  },
+  "devDependencies": {
+    "chai": "^5.1.1",
+    "mocha": "^10.7.3"
   }
 }

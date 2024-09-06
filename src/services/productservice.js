@@ -65,6 +65,14 @@ const productMock = async () => {
     }
 }
 
+const deleteAllProducts = async () => {
+    try {
+        return await productDao.deleteAllProducts()
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
 const productService = {
     getById,
     getAll,
@@ -72,7 +80,8 @@ const productService = {
     update,
     updateOne,
     findByIddelete,
-    productMock
+    productMock,
+    deleteAllProducts
 }
 
 export default productService

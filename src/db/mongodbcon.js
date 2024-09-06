@@ -1,7 +1,7 @@
 import { connect } from "mongoose";
 import { config } from "../config/config.js";
 
-const MONGO_URI = config.MONGO_URI;
+const MONGO_URI = config.MONGO_URI_TEST;
 class ConnectMongoDB {
     static #instance
     constructor() {
