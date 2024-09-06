@@ -7,7 +7,7 @@ const createCart = async (req, res, next) => {
     try {
         const cart = await cartService.create()
         // await cartManager.createCart()
-        return httpResponse.Ok(res, `Carrito creado con éxito con ID: ${cart._id}`)
+        return httpResponse.Ok(res, cart._id)
     } catch (error) {
         next(error)
     }
