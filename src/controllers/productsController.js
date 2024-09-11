@@ -60,6 +60,7 @@ const getProductsApiMode = async(req, res) => {
 const createProduct = async (req, res, next) => {
     try {
         const { title, category, price, code, description, stock } = req.body;
+        const userEmail = req.user.email        
         const createdProduct = await productService.create({
             pid: uuidv4(),
             title,
@@ -67,7 +68,8 @@ const createProduct = async (req, res, next) => {
             price,
             code,
             description,
-            stock
+            stock,
+            owner: userEmail
         })
         return httpResponse.Ok(res, createdProduct)
     } catch (error) {
@@ -78,8 +80,14 @@ const createProduct = async (req, res, next) => {
 const modifyProduct = async (req, res, next) => {
     try {
         let productId = req.params.pid
-        let updatedProduct = await productService.update(productId, req.body)
-        updatedProduct ? httpResponse.Ok(res, updatedProduct) : httpResponse.NotFound(res, 'Producto no encontrado')
+        const {email, role} = req.session
+        let product = await productService.getById(productId)
+        if(email == product.owner || role == 'admin') {
+            let updatedProduct = await productService.update(productId, req.body)
+            updatedProduct ? httpResponse.Ok(res, updatedProduct) : httpResponse.NotFound(res, 'Producto no encontrado')
+        } else {
+            httpResponse.NotFound(res, 'Producto no encontrado o no tiene los permisos requeridos para modificar el producto')
+        }
     } catch (error) {
         next(error)
     }
@@ -88,8 +96,14 @@ const modifyProduct = async (req, res, next) => {
 const deleteProduct = async (req, res, next) => {
     try {
         let productId = req.params.pid
-        await productService.findByIddelete(productId)
-        return httpResponse.Ok(res, 'Producto eliminado con éxito')
+        const {email, role} = req.session
+        let product = await productService.getById(productId)
+        if(email == product.owner || role == 'admin') {
+            await productService.findByIddelete(productId)
+            return httpResponse.Ok(res, 'Producto eliminado con éxito')
+        } else {
+            httpResponse.NotFound(res, 'Producto no encontrado o no tiene los permisos requeridos para eliminar el producto')
+        }
     } catch (error) {
         console.log(error)
         next(error)

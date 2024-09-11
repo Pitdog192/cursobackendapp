@@ -9,7 +9,8 @@ export const generateProduct = () => {
         status: faker.datatype.boolean(),
         stock: faker.number.int({ min: 1, max: 100 }),
         category: faker.commerce.productAdjective(),
-        thumbnail: faker.image.avatar()
+        thumbnail: faker.image.avatar(),
+        owner: faker.person.name(),
     }
 }
 

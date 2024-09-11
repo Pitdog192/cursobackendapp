@@ -12,7 +12,8 @@ const productSchema = new Schema({
     status: {type: Boolean, default: true},
     stock: {type: Number},
     category: {type: String, required: true},
-    thumbnail: {type: String, required: false}
+    thumbnail: {type: String, required: false},
+    owner: {type: String, required: false , default: 'admin'},
 })
 
 
