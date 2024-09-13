@@ -13,9 +13,15 @@ export default class DaoMongoDB {
 
     async getById(id) {
         try {
-            return await this.model.findById(id)
+            const result = await this.model.findById(id);
+            if (!result) {
+                console.warn(`No se encontró ningún registro con el ID: ${id}`);  // Usamos console.warn en lugar de lanzar un error.
+                return null;  // Devolvemos null si no se encuentra el usuario.
+            }
+            return result;
         } catch (error) {
-            throw new Error(error)
+            console.error(`Error en getById: ${error.message}`);  // Muestra el error en la consola.
+            throw error;  // Lanza el error sin crear un nuevo objeto de error.
         }
     }
 
@@ -111,7 +117,7 @@ export default class DaoMongoDB {
             return await this.model.findByIdAndUpdate(
                 cartId,
                 { $set: { products: [] } },
-                { new: true }
+                { new: true } // Devuelve el documento actualizado
             );
         } catch (error) {
             throw new Error(error)
@@ -123,7 +129,7 @@ export default class DaoMongoDB {
             return await this.model.findByIdAndUpdate(
                 userId,
                 { $set: pass },
-                { new: true }
+                { new: true } // Devuelve el documento actualizado
             );
         } catch (error) {
             throw new Error(error)
@@ -140,7 +146,7 @@ export default class DaoMongoDB {
             return await this.model.findByIdAndUpdate(
                 userId,
                 { $set: updateFields },
-                { new: true }
+                { new: true } // Devuelve el documento actualizado
             );
         } catch (error) {
             throw new Error(error);
@@ -153,6 +159,41 @@ export default class DaoMongoDB {
             return response;
         } catch (error) {
             throw new Error(error);
+        }
+    }
+
+    async updatePremium(user, changes){
+        try {
+            return await this.model.findByIdAndUpdate(
+                user,
+                { $set: changes },
+                { new: true } // Devuelve el documento actualizado
+            );
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+
+    async last_connection(userId, newDate) {
+        try {
+            // Update the last connection date for the given user
+            const updatedUser = await this.model.findByIdAndUpdate(
+                userId,
+                { $set: { last_connection: newDate } },
+                { new: true } // Return the updated document
+            );
+    
+            // Check if the user was found and updated
+            if (!updatedUser) {
+                throw new Error(`User with ID ${userId} not found`);
+            }
+    
+            return updatedUser;
+        } catch (error) {
+            // Log the error for debugging purposes
+            console.error('Error updating last connection:', error);
+            // Throw a more specific error
+            throw new Error(`Failed to update last connection: ${error.message}`);
         }
     }
 }

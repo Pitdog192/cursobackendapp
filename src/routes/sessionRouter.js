@@ -16,12 +16,10 @@ sessionRouter.post('/login', passport.authenticate('login'), userController.logi
 
 //ESTRATEGIA DE GITHUB
 sessionRouter.get('/githubestra', passport.authenticate('github', { scope: [ 'user:email' ] }))  
+
 sessionRouter.get('/githubprofile', passport.authenticate( 'github'), userController.githubLogin);
-
 sessionRouter.post('/logout', userController.logout)
-
 sessionRouter.get('/current', checkAuth, userController.current)
 sessionRouter.get('/setrecoverycookie', userController.handlePasswordResetLink)
 sessionRouter.post('/recovery_pass', checkAuth ,userController.updatePass)
-
 export default sessionRouter

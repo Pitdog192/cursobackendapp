@@ -15,7 +15,12 @@ const UserSchema = new Schema({
         default: []
     },
     resetPasswordToken: { type: String },
-    resetPasswordExpires: { type: Date }
+    resetPasswordExpires: { type: Date },
+    documents: [{
+        name: { type: String },
+        link: { type: String }
+    }],
+    last_connection: { type: String}
 })
 
 const userModel = mongoose.model('users', UserSchema)

@@ -27,13 +27,19 @@ const getCartById = async(req, res, next) => {
 const insertProduct = async(req, res, next) => {
     try {
         let {pid , cid} = req.params
-        const findProdInCart = await cartService.existProdInCart(cid, pid)
-        if(findProdInCart){
-            const error = new Error('Producto ya existente en el carrito')
-            throw error
-        } else{
-            const productAdded = await cartService.addProdToCart(cid, pid)
-            return httpResponse.Ok(res, `Producto agregado con éxito, ID: ${pid}`)
+        const product = await productService.getById(pid)
+        const {email, role} = req.session
+        if(role == 'premium' && email == product.owner){
+            return httpResponse.NotFound(res, `No puede comprar su propio producto, con ID: ${pid}`)
+        } else {
+            const findProdInCart = await cartService.existProdInCart(cid, pid)
+            if(findProdInCart){
+                const error = new Error('Producto ya existente en el carrito')
+                throw error
+            } else {
+                const productAdded = await cartService.addProdToCart(cid, pid)
+                return httpResponse.Ok(res, `Producto agregado con éxito, ID: ${pid}`)
+            }
         }
     } catch (error) {
         next(error)

@@ -3,6 +3,7 @@ import { generateToken } from "../middlewares/jwt.js"
 import persistence from '../persistance/dao/factory.js'
 const { userDao, cartDao } = persistence;
 import UserRepository from "../persistance/repository/user.repository.js"
+import mongoose from "mongoose";
 const userRepository = new UserRepository()
 
 const searchUser = async (email) => {
@@ -15,7 +16,23 @@ const searchUser = async (email) => {
 
 const searchUserById = async (id) => {
     try {
-        return await userDao.getCartById(id)
+        return await userDao.getById(id)
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
+const searchUserByEmail = async (email) => {
+    try {
+        return await userDao.getOne({email: email})
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
+const searchCartById = async (id) => {
+    try {
+        return await userDao.getById(id)
     } catch (error) {
         throw new Error(error)
     }
@@ -105,14 +122,54 @@ const updatePass = async (user, pass) => {
     }
 }
 
+const changePremium = async (user) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(user)) {
+            console.warn(`ID inválido: ${user}`);
+            return null;
+        }
+        const findedUser = await userDao.getById(user);
+        
+        if (!findedUser) {
+            console.warn('El usuario no fue encontrado.');
+            return null;  // Devuelve null si el usuario no es encontrado.
+        }
+
+        if (findedUser.role === 'premium') {
+            const userchange = await userDao.updatePremium(user, { role: 'user' });
+            return userchange;
+        } else {
+            const userchange = await userDao.updatePremium(user, { role: 'premium' });
+            return userchange;  // Devuelve el usuario modificado.
+        }
+    } catch (error) {
+        console.error('Error al cambiar a premium:', error.message);
+        throw error;  // Lanza el error nuevamente.
+    }
+};
+
+const last_connection = async (user, newDate) => {
+    try {
+        let userDate = await userDao.last_connection(user, newDate);
+        return userDate;
+    } catch (error) {
+        console.error('Error al establecer la fecha de ingreso:', error.message);
+        throw error;  // Lanza el error nuevamente.
+    }
+};
+
 const userService = {
     createUser,
     loginUser,
     searchUser,
-    searchUserById,
+    searchUserByEmail,
     sendUserInfo,
     generateResetPass,
-    updatePass
+    updatePass,
+    changePremium,
+    last_connection,
+    searchCartById,
+    searchUserById
 }
 
 export default userService

@@ -1,6 +1,7 @@
 import passport from "passport"                                                   
 import { Strategy as LocalStrategy } from 'passport-local'
 import userService from "../../services/userservice.js"
+import { formatDate } from "../../utils/utils.js"
 
 const strategyConfig = {
     usernameField: 'email',
@@ -26,6 +27,8 @@ passport.use('login', new LocalStrategy(strategyConfig, async (req, email, passw
             req.session.destroy()
             return done(null, false, { message: 'Sin autorizar' })
         }
+        const newLoginDate = formatDate(new Date()) // Fecha actual 
+        let userDate = await userService.last_connection(userLogin._id, newLoginDate)
         return done(null, userLogin)
     } catch (error) {
         return done(error)

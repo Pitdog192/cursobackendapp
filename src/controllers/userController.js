@@ -2,6 +2,7 @@ import userService from "../services/userservice.js"
 import { generateToken } from '../middlewares/jwt.js'
 import { httpResponse } from "../utils/httpResponse.js"
 import { logger } from "../utils/logger.js"
+import { formatDate } from "../utils/utils.js"
 
 const register = async (req, res, next) => {
     try {
@@ -45,10 +46,24 @@ const githubLogin = async (req, res, next) => {
 
 const logout = async (req, res) => {
     try {
-        req.session.destroy()
-        res.redirect('/views/login')
+        const {email} = req.session
+        const userLogin = await userService.searchUserByEmail(email);
+        if (!userLogin) throw new Error('Usuario no encontrado');
+
+        const newLoginDate = formatDate(new Date()); // Fecha actual
+        let userDate = await userService.last_connection(userLogin._id, newLoginDate);
+        if (!userDate) throw new Error('Error al establecer la fecha: ' + newLoginDate);
+
+        req.session.destroy((err) => {
+            if (err) {
+                console.error('Error al destruir la sesión:', err);
+                return res.status(500).send('Error al cerrar sesión');
+            }
+            res.redirect('/views/login');
+        });
     } catch (error) {
-        throw new Error(error)
+        console.error('Error en el proceso de cierre de sesión:', error.message);
+        res.status(500).send('Error en el cierre de sesión: ' + error.message);
     }
 }
 
@@ -82,7 +97,7 @@ const updatePass = async (req, res, next) => {
         res.clearCookie('tokenpass');
         return httpResponse.Ok(res, updPass);
     } catch (error) {
-        return next(error);
+        return error
     }
 }
 
@@ -99,6 +114,29 @@ const handlePasswordResetLink = (req, res) => {
     res.redirect('/views/recovery_password');
 };
 
+const changePremium = async (req, res) => {
+    try {
+        let userID = req.params.uid
+        const changed = await userService.changePremium(userID)
+        if(changed) {
+            return httpResponse.Ok(res, `Membrecy changed on user: ${changed.email}`)
+        } else {
+            return httpResponse.NotFound(res, `User not found`)
+        }
+    } catch (error) {
+        return error
+    }
+}
+
+const uploadDocuments = async (req, res) => {
+    try {
+        
+    } catch (error) {
+        console.error('Error en el proceso de carga de archivos:', error.message);
+        res.status(500).send('Error en la carga de archivos: ' + error.message);
+    }
+}
+
 const userController = {
     register,
     login,
@@ -106,7 +144,9 @@ const userController = {
     logout,
     current,
     updatePass,
-    handlePasswordResetLink
+    handlePasswordResetLink,
+    changePremium,
+    uploadDocuments
 }
 
 export default userController

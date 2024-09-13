@@ -4,6 +4,7 @@ import productRouter from './routes/products.route.js'
 import viewsRouter from './routes/views.router.js'
 import sessionRouter from './routes/sessionRouter.js'
 import emailRouter from './routes/email.router.js'
+import usersRouter from './routes/users.router.js'
 import handlebars from 'express-handlebars'
 import {__dirname} from './utils/utils.js'
 import { Server } from 'socket.io'
@@ -59,8 +60,9 @@ app.engine('handlebars', handlebars.engine())
 .use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerJSDoc(info)))
 .use('/api/products', productRouter)
 .use('/api/carts', cartRouter)
-.use('/views', viewsRouter)
+.use('/api/users', usersRouter)
 .use('/api/sessions', sessionRouter)
+.use('/views', viewsRouter)
 .use('/email', emailRouter)
 .disable('x-powered-by');
 
