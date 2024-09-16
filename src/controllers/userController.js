@@ -104,7 +104,7 @@ const updatePass = async (req, res, next) => {
 const handlePasswordResetLink = (req, res) => {
     const token = req.query.token;
     if (!token) {
-        return res.status(400).send('Token inválido');
+        return httpResponse.NotFound(res, 'Token inválido');
     }
 
     // Establecer el token en un cookie con una duración de 1 hora
@@ -130,10 +130,19 @@ const changePremium = async (req, res) => {
 
 const uploadDocuments = async (req, res) => {
     try {
+        if (!req.file) {
+            return httpResponse.NotFound(res, 'Error: No se subió ningún archivo.')
+        }
+        if (req.file.mimetype !== 'image/jpeg' && req.file.mimetype !== 'image/png') {
+            return httpResponse.NotFound(res, 'Error: Solo se permiten imágenes en formato JPEG o PNG.')
+        }
         
+        if (req.file.size > 5 * 1024 * 1024) { // 5MB
+            return httpResponse.NotFound(res, 'Error: El archivo es demasiado grande.')
+        }
+        return httpResponse.Ok(res, 'Archivo subido con éxito')
     } catch (error) {
-        console.error('Error en el proceso de carga de archivos:', error.message);
-        res.status(500).send('Error en la carga de archivos: ' + error.message);
+        return httpResponse.ServerError(res, `Error en la carga de archivos: ${error.message}`)
     }
 }
 
