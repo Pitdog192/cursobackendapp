@@ -196,4 +196,17 @@ export default class DaoMongoDB {
             throw new Error(`Failed to update last connection: ${error.message}`);
         }
     }
+
+    async uploadImage(image){
+        try {
+            const {name, link, userid} = image;
+            return await this.model.findByIdAndUpdate(
+                userid,
+                { $push: { documents: { name, link } } },
+                { new: true } // Devuelve el documento actualizado
+            );
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
 }

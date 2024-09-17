@@ -158,6 +158,16 @@ const last_connection = async (user, newDate) => {
     }
 };
 
+const uploadImage = async (image) => { //Llega un objeto con propiedades name, link y id del user
+    try {
+        let userDate = await userDao.uploadImage(image);
+        return userDate;
+    } catch (error) {
+        console.error('Error al establecer la fecha de ingreso:', error.message);
+        throw error;  // Lanza el error nuevamente.
+    }
+};
+
 const userService = {
     createUser,
     loginUser,
@@ -169,7 +179,8 @@ const userService = {
     changePremium,
     last_connection,
     searchCartById,
-    searchUserById
+    searchUserById,
+    uploadImage
 }
 
 export default userService

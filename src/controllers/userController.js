@@ -140,7 +140,13 @@ const uploadDocuments = async (req, res) => {
         if (req.file.size > 5 * 1024 * 1024) { // 5MB
             return httpResponse.NotFound(res, 'Error: El archivo es demasiado grande.')
         }
-        return httpResponse.Ok(res, 'Archivo subido con éxito')
+        let user = {
+            userid: req.session.passport.user,
+            name: req.file.filename,
+            link: req.file.path
+        }
+        const userImageUpload = await userService.uploadImage(user)
+        return httpResponse.Ok(res, `Archivo subido con éxito: ${req.file.originalname}`)
     } catch (error) {
         return httpResponse.ServerError(res, `Error en la carga de archivos: ${error.message}`)
     }
