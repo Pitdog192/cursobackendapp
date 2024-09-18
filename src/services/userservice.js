@@ -168,6 +168,37 @@ const uploadImage = async (image) => { //Llega un objeto con propiedades name, l
     }
 };
 
+const getAllUsers = async () => {
+    try {
+        let allUsers = await userDao.getAllUsers();
+        if(allUsers){
+            const userInfo = await userRepository.sendAllUsersInfo(allUsers)
+            return userInfo;
+        } else {
+            return null;  // Devuelve null si no hay usuarios.
+        }
+    } catch (error) {
+        console.error('Error al obtener todos los usuarios:', error.message);
+        throw error;  // Lanza el error nuevamente.
+    }
+};
+
+const deleteAllUsers = async () => {
+    try {
+        let usersToDelete = await userDao.getAllUsers();
+        //aca hace la comprobacion de fecha y le envio los que la superan
+        let deletedUsers = await userDao.deleteAllUsers(usersToDelete);
+        if(deletedUsers){
+            return deletedUsers;
+        } else {
+            return null;  // Devuelve null si no hay usuarios.
+        }
+    } catch (error) {
+        console.error('Error al eliminar usuarios:', error.message);
+        throw error;  // Lanza el error nuevamente.
+    }
+};
+
 const userService = {
     createUser,
     loginUser,
@@ -180,7 +211,9 @@ const userService = {
     last_connection,
     searchCartById,
     searchUserById,
-    uploadImage
+    uploadImage,
+    getAllUsers,
+    deleteAllUsers
 }
 
 export default userService

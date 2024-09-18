@@ -152,6 +152,32 @@ const uploadDocuments = async (req, res) => {
     }
 }
 
+const getAllUsers = async (req, res) => {
+    try {
+        const allUsers = await userService.getAllUsers()
+        if(allUsers) {
+            return httpResponse.Ok(res, allUsers)
+        } else {
+            return httpResponse.NotFound(res, `User not found`)
+        }
+    } catch (error) {
+        return error
+    }
+}
+
+const deleteAllUsers = async (req, res) => {
+    try {
+        const deletedUsers = await userService.deleteAllUsers()
+        if(deletedUsers) {
+            return httpResponse.Ok(res, deletedUsers)
+        } else {
+            return httpResponse.NotFound(res, `Users to delete not found`)
+        }
+    } catch (error) {
+        return error
+    }
+}
+
 const userController = {
     register,
     login,
@@ -161,7 +187,9 @@ const userController = {
     updatePass,
     handlePasswordResetLink,
     changePremium,
-    uploadDocuments
+    uploadDocuments,
+    getAllUsers,
+    deleteAllUsers
 }
 
 export default userController

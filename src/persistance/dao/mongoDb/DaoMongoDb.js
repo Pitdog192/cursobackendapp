@@ -209,4 +209,21 @@ export default class DaoMongoDB {
             throw new Error(error);
         }
     }
+
+    async getAllUsers(){
+        try {
+            return await this.model.find({});
+        } catch (error) {
+            throw new Error(`Error al obtener los usuarios: ${error.message}`)
+        }
+    }
+
+    async deleteAllUsers(usersToDelete){
+        try {
+            const response = await this.model.deleteMany({});
+            return response;
+        } catch (error) {
+            throw new Error(`Error al obtener los usuarios: ${error.message}`)
+        }
+    }
 }
