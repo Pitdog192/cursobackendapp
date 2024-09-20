@@ -185,16 +185,25 @@ const getAllUsers = async () => {
 
 const deleteAllUsers = async () => {
     try {
-        let usersToDelete = await userDao.getAllUsers();
-        //aca hace la comprobacion de fecha y le envio los que la superan
+        let usersToDelete = [];
+        let users = await userDao.getAllUsers();
+        const today = new Date();
+        users.forEach(user => {
+            let [datePart] = user.last_connection.split('_');
+            let [day, month, year] = datePart.split('-');
+            let lastConnectionDate = new Date(`${year}-${month}-${day}`);
+            let diffTime = today - lastConnectionDate;
+            // let diffDays = diffTime / (1000 * 60 * 60 * 24); 2 dias
+            let diffDays = diffTime / (1000 * 60 * 5);
+            if (diffDays > 2) {
+                usersToDelete.push(user);
+            }
+        });
+        console.log(usersToDelete);
         let deletedUsers = await userDao.deleteAllUsers(usersToDelete);
-        if(deletedUsers){
-            return deletedUsers;
-        } else {
-            return null;  // Devuelve null si no hay usuarios.
-        }
+        return deletedUsers;
     } catch (error) {
-        console.error('Error al eliminar usuarios:', error.message);
+        console.error('Error al obtener todos los usuarios:', error.message);
         throw error;  // Lanza el error nuevamente.
     }
 };
