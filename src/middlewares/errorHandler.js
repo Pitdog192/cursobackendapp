@@ -14,6 +14,14 @@ export const validateRole = (req, res, next) => {
     next()
 }
 
+export const validateAdmin = (req, res, next) => {
+    if(req.session.role === 'admin'){
+        next()
+    }else {
+        res.redirect('/views/login?message=No es usuario administrador')
+    }
+}
+
 export const validateAuth = (req, res, next) => {
     if(req.session.email){
         next()

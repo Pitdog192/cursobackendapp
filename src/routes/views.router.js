@@ -2,6 +2,7 @@ import { Router } from "express"
 import productManager from "../persistance/dao/fileSystem/container/productos.js"
 import productController from "../controllers/productsController.js"
 import { errorHandler, validateRole, validateAuth } from "../middlewares/errorHandler.js"
+import { checkAuth } from "../middlewares/jwt.js"
 
 const viewsRouter = Router()
 
@@ -32,6 +33,10 @@ viewsRouter.get('/recovery_password', (req, res) =>{
 
 viewsRouter.get('/sendrecoverymail', (req, res) =>{
     res.render('./users/sendmailtorecovery')
+})
+
+viewsRouter.get('/changemembrecy', checkAuth, validateRole, (req, res) =>{
+    res.render('./users/premiumUser')
 })
 
 export default viewsRouter

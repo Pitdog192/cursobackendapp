@@ -199,7 +199,6 @@ const deleteAllUsers = async () => {
                 usersToDelete.push(user);
             }
         });
-        console.log(usersToDelete);
         let deletedUsers = await userDao.deleteAllUsers(usersToDelete);
         return deletedUsers;
     } catch (error) {
