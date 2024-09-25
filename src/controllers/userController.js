@@ -89,7 +89,6 @@ const updatePass = async (req, res, next) => {
             return httpResponse.Unauthorized(res, { msg: 'Invalid Token' });
         }
         const updPass = await userService.updatePass(user, pass1);
-        console.log(updPass);
         
         if (!updPass) {
             return httpResponse.NotFound(res, { msg: 'cannot be the same' });

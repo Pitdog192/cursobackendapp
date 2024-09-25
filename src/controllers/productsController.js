@@ -2,6 +2,8 @@ import { v4 as uuidv4 } from 'uuid'
 import productService from '../services/productservice.js'
 import { httpResponse } from "../utils/httpResponse.js"
 import { logger } from '../utils/logger.js'
+import emailservice from '../services/emailservice.js'
+import userService from '../services/userservice.js'
 
 const getProduct = async (req, res, next) => {
     let productId = req.params.pid
@@ -10,6 +12,7 @@ const getProduct = async (req, res, next) => {
         if(!product) return httpResponse.NotFound(res, 'Product not exist')
         return httpResponse.Ok(res, product)
     } catch (error) {
+        logger.error(error)
         next(error)
     }
 }
@@ -73,6 +76,7 @@ const createProduct = async (req, res, next) => {
         })
         return httpResponse.Ok(res, createdProduct)
     } catch (error) {
+        logger.error(error)
         next(error)
     }
 }
@@ -89,6 +93,7 @@ const modifyProduct = async (req, res, next) => {
             httpResponse.NotFound(res, 'Producto no encontrado o no tiene los permisos requeridos para modificar el producto')
         }
     } catch (error) {
+        logger.error(error)
         next(error)
     }
 }
@@ -100,11 +105,21 @@ const deleteProduct = async (req, res, next) => {
         let product = await productService.getById(productId)
         if(email == product.owner || role == 'admin') {
             await productService.findByIddelete(productId)
+            let user = await userService.searchUserByEmail(email)
+            if(user.role == 'premium') {
+                let createMailOptions = emailservice.createMailOptions(user.email, 'Producto Eliminado','deletedProduct', {
+                    title: 'Producto eliminado',
+                    text: `Su producto <b>${product.nombre}</b> ha sido eliminado por usted o un administrador`
+                })
+                const response = await emailservice.sendRecoveryMail(createMailOptions);
+                if(response.rejected.length <= 1) logger.info(`Email enviado a : ${response.accepted[0]}`);
+            }
             return httpResponse.Ok(res, 'Producto eliminado con éxito')
         } else {
             httpResponse.NotFound(res, 'Producto no encontrado o no tiene los permisos requeridos para eliminar el producto')
         }
     } catch (error) {
+        logger.error(error)
         console.log(error)
         next(error)
     }
@@ -115,6 +130,7 @@ const productMock = async (req, res, next) => {
         let mockingproducts = await productService.productMock()
         return httpResponse.Ok(res, mockingproducts)
     } catch (error) {
+        logger.error(error)
         console.log(error)
         next(error)
     }
@@ -125,6 +141,7 @@ const deleteAllProducts = async (req, res, next) => {
         await productService.deleteAllProducts()
         return httpResponse.Ok(res, 'Todos los productos eliminados con exito')
     } catch (error) {
+        logger.error(error)
         console.log(error)
         next(error)
     }
