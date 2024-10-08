@@ -2,7 +2,7 @@
   "type": "module",
   "scripts": {
     "start": "nodemon --env-file=.env ./src/app.js mongodb",
-    "dev": "nodemon --env-file=.env ./src/app.js mongodb development",
+    "dev": "node ./src/app.js mongodb development",
     "prod": "nodemon --env-file=.env ./src/app.js mongodb productive",
     "test:linux": "export NODE_OPTIONS=--experimental-vm-modules && npx jest ./src/test/app",
     "test:win": "set NODE_OPTIONS=--experimental-vm-modules&& npx jest .src/test/app.test.js",
