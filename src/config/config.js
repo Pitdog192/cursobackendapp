@@ -13,5 +13,6 @@ export const config = {
     EMAIL: process.env.EMAIL,
     EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
     EMAIL_PORT: process.env.EMAIL_PORT,
-    MONGO_URI_TEST: process.env.MONGO_URI_TEST
+    MONGO_URI_TEST: process.env.MONGO_URI_TEST,
+    ML_ACCESS_TOKEN : process.env.ML_ACCESS_TOKEN,
 }

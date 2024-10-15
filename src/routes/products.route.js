@@ -9,7 +9,7 @@ const productRouter = Router()
 productRouter.get('/mockingproducts', productController.productMock)
 
 productRouter.get('/', checkAuth, validateRole, productController.getProducts)
-productRouter.get('/getProdsApi', checkAuth, validateRole, productController.getProductsApiMode)
+productRouter.get('/getProdsApi',productController.getProductsApiMode)
 productRouter.get('/:pid', checkAuth, validateRole, productController.getProduct)
 productRouter.post('/', checkAuth, validateRole, productController.createProduct)
 productRouter.put('/:pid', checkAuth, validateRole, productController.modifyProduct)

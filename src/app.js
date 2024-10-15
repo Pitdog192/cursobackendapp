@@ -25,6 +25,7 @@ import helmet from 'helmet'
 import swaggerUI from 'swagger-ui-express'
 import swaggerJSDoc from 'swagger-jsdoc'
 import { info } from '../docs/info.js'
+import { MercadoPagoConfig, Preference } from 'mercadopago';
 
 const PORT = config.PORT || 8080
 const app = express()
@@ -42,7 +43,16 @@ const storeConfig = {
     cookie: { maxAge: 180000 }
 }
 
+//USUARIO VENDEDOR
+const client = new MercadoPagoConfig({ accessToken: config.ML_ACCESS_TOKEN });
+const preference = new Preference(client)
+
 app.engine('handlebars', handlebars.engine())
+.use(cors({
+    origin: 'http://localhost:5173', // Permitir sólo desde ese origen
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
+    credentials: true // Si necesitas enviar cookies o cabeceras de autenticación
+  }))
 .set('views', __dirname+'/../views')
 .set('view engine', 'handlebars')
 .use(helmet())
@@ -53,7 +63,6 @@ app.engine('handlebars', handlebars.engine())
 .use(cookieParser())
 .use(compression())
 .use(session(storeConfig))
-.use(cors({origin: config.FRONT_ORIGIN}))
 .use(flash())
 .use(passport.initialize())
 .use(passport.session())
@@ -72,6 +81,29 @@ app.get('/loggerTest', (req, res) =>{
     logger.info('Simulandolog info')
     logger.warn('Simulandolog warn')
     logger.error('Simulando log error en prod')
+})
+
+app.post('/create-preference', async (req, res)=>{
+    const { quantity, price, title } = req.body;
+    const body = {
+        items: [
+            {
+                title: title,
+                quantity: Number(quantity),
+                unit_price: Number(price),
+                currency_id: 'ARS'
+            }
+        ],
+        back_urls: {
+            success: 'http://localhost:5173',
+            failure: 'http://localhost:5173',
+            pending: 'http://localhost:5173'
+        },
+        auto_return:'approved'
+    };
+
+    const response = await preference.create({body});
+    res.json({ id: response.id })
 })
 
 app.get('*', (req, res) => {
